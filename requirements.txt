@@ -1,0 +1,6 @@
+%%capture
+!pip -q uninstall pyarrow -y
+!pip -q install pyarrow==15.0.2
+!pip -q install datasets
+!pip -q install accelerate
+!pip -q install transformers

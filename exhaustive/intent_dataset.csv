@@ -1,0 +1,26 @@
+text,intent
+What is the status of flight 123?,flight_status
+Can you tell me if flight 456 is on time?,flight_status
+Is flight 789 delayed?,flight_status
+Can I get an update on flight ABC?,flight_status
+Has flight XYZ already departed?,flight_status
+I want to book a flight.,book_flight
+Can you help me book a ticket?,book_flight
+I need to book a flight to New York.,book_flight
+How do I reserve a flight?,book_flight
+"Book a flight for me, please.",book_flight
+Cancel my ticket.,cancel_ticket
+I need to cancel my flight reservation.,cancel_ticket
+Can you help me cancel my booking?,cancel_ticket
+Cancel the ticket for flight 123.,cancel_ticket
+How do I cancel my ticket?,cancel_ticket
+I need to reschedule my flight.,reschedule_flight
+Can you help me change my flight time?,reschedule_flight
+Reschedule my flight to tomorrow.,reschedule_flight
+How do I postpone my flight?,reschedule_flight
+Can I reschedule my booking for next week?,reschedule_flight
+What is your baggage policy?,baggage_policy
+How much luggage can I carry?,baggage_policy
+Tell me about the baggage allowance.,baggage_policy
+Is there a fee for extra luggage?,baggage_policy
+What are the rules for hand baggage?,baggage_policy
