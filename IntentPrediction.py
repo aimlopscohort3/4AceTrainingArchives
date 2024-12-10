@@ -52,6 +52,14 @@ train_data = Dataset.from_dict({'text': train_texts, 'label': train_labels})
 val_data = Dataset.from_dict({'text': val_texts, 'label': val_labels})
 dataset = DatasetDict({"train": train_data, "validation": val_data})
 
+
+## Here i used this code as well for matchign with other trainings
+#df = df.drop(columns=['intent'])
+#dataset = Dataset.from_pandas(df)
+#split = dataset.train_test_split(test_size=0.2)
+#train_dataset = split['train']
+#val_dataset = split['test']
+
 # Step 5: Load tokenizer and model
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=len(unique_intents),
@@ -65,6 +73,14 @@ def tokenize_function(example):
 # Apply tokenization
 tokenized_datasets = dataset.map(tokenize_function, batched=True)
 tokenized_datasets.set_format("torch")
+
+## Here i used this code as well for matchign with other trainings
+# Apply tokenization
+#tokenized_train_datasets = train_dataset.map(tokenize_function, batched=True)
+#tokenized_val_datasets = val_dataset.map(tokenize_function, batched=True)
+
+#tokenized_train_datasets.set_format("torch")
+#tokenized_val_datasets.set_format("torch")
 
 # Step 7: Training setup
 training_args = TrainingArguments(
