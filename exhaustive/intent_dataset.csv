@@ -1,26 +1,436 @@
 text,intent
-What is the status of flight 123?,flight_status
-Can you tell me if flight 456 is on time?,flight_status
-Is flight 789 delayed?,flight_status
-Can I get an update on flight ABC?,flight_status
-Has flight XYZ already departed?,flight_status
-I want to book a flight.,book_flight
-Can you help me book a ticket?,book_flight
-I need to book a flight to New York.,book_flight
-How do I reserve a flight?,book_flight
-"Book a flight for me, please.",book_flight
-Cancel my ticket.,cancel_ticket
-I need to cancel my flight reservation.,cancel_ticket
-Can you help me cancel my booking?,cancel_ticket
-Cancel the ticket for flight 123.,cancel_ticket
-How do I cancel my ticket?,cancel_ticket
-I need to reschedule my flight.,reschedule_flight
-Can you help me change my flight time?,reschedule_flight
-Reschedule my flight to tomorrow.,reschedule_flight
-How do I postpone my flight?,reschedule_flight
-Can I reschedule my booking for next week?,reschedule_flight
-What is your baggage policy?,baggage_policy
-How much luggage can I carry?,baggage_policy
-Tell me about the baggage allowance.,baggage_policy
-Is there a fee for extra luggage?,baggage_policy
-What are the rules for hand baggage?,baggage_policy
+Is the flight <MASKED_FLIGHT_NUM> on time?,flight_status
+Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?,flight_status
+Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?,flight_status
+Is airplane <MASKED_FLIGHT_NUM> still on time?,flight_status
+Can you check the schedule for flight <MASKED_FLIGHT_NUM>?,flight_status
+Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?,flight_status
+Do you have updates on flight <MASKED_FLIGHT_NUM>? Is it on time?,flight_status
+Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?,flight_status
+What is the current status of flight <MASKED_FLIGHT_NUM>?,flight_status
+Has flight <MASKED_FLIGHT_NUM> taken off yet?,flight_status
+Can you provide the latest updates on flight <MASKED_FLIGHT_NUM>?,flight_status
+Is flight <MASKED_FLIGHT_NUM> delayed or on time?,flight_status
+When is flight <MASKED_FLIGHT_NUM> expected to land?,flight_status
+Can you verify the arrival time for flight <MASKED_FLIGHT_NUM>?,flight_status
+I need the departure status of flight <MASKED_FLIGHT_NUM>.,flight_status
+Is flight 345 on time?,flight_status
+Can you check the status of flight 6789?,flight_status
+What is the latest update on flight 1234?,flight_status
+Has flight 4567 boarded yet?,flight_status
+Is flight 8901 delayed?,flight_status
+Can you confirm if flight 2345 is departing soon?,flight_status
+Did flight 8765 take off on time?,flight_status
+Is airplane 4321 running as scheduled?,flight_status
+Please check if flight 9999 is in the air.,flight_status
+Has flight 123 taken off?,flight_status
+Can you track the status of flight 777?,flight_status
+Is flight 5432 experiencing any delays?,flight_status
+I need updates on flight 1111.,flight_status
+What is the departure time for flight 5678?,flight_status
+Do you know the arrival time of flight 3333?,flight_status
+Has flight 432 taken off or been delayed?,flight_status
+Can I get the latest status for flight 6543?,flight_status
+Is the aircraft 2121 on schedule?,flight_status
+Is flight 8989 boarding yet?,flight_status
+What’s the estimated time of arrival for flight 2020?,flight_status
+Can you check the delay status of flight 5050?,flight_status
+Is flight <MASKED_FLIGHT_NUM> grounded?,flight_status
+Has flight <MASKED_FLIGHT_NUM> landed safely?,flight_status
+What is the expected departure for flight 747?,flight_status
+Do you know if flight 3456 has left the gate?,flight_status
+Is flight 8888 arriving on time?,flight_status
+I need to verify the schedule of flight 654?,flight_status
+Is flight 3339 still on track for departure?,flight_status
+Do you know if flight <MASKED_FLIGHT_NUM> is boarding now?,flight_status
+What is the estimated time of departure for flight 7777?,flight_status
+Is flight 1818 rescheduled or on time?,flight_status
+Can you track if flight 444 is in the air?,flight_status
+Is there a delay for flight 6969?,flight_status
+Please confirm if flight 7373 is still scheduled.,flight_status
+Has airplane 555 taken off?,flight_status
+I need status updates on flight 9090.,flight_status
+Is flight 1212 canceled?,flight_status
+Can you check if flight 7771 is affected by weather?,flight_status
+When is flight 4747 expected to leave?,flight_status
+What’s the latest for flight <MASKED_FLIGHT_NUM>?,flight_status
+Can you confirm if flight 2727 has landed yet?,flight_status
+I need information on flight 1919.,flight_status
+Is flight 2828 arriving late?,flight_status
+Can you verify flight 8181’s status?,flight_status
+Has flight <MASKED_FLIGHT_NUM> been delayed or canceled?,flight_status
+Is flight <MASKED_FLIGHT_NUM> operational today?,flight_status
+When will flight <MASKED_FLIGHT_NUM> land?,flight_status
+Please give updates on flight 9991.,flight_status
+Can you check flight 6060’s departure time?,flight_status
+Has flight 3434 left yet?,flight_status
+I need to confirm flight 9494's arrival time.,flight_status
+Is airplane 8787 ready to depart?,flight_status
+Can you confirm if flight 3030 is still on track?,flight_status
+What is the departure gate for flight 2525?,flight_status
+Can I track the real-time status of flight 1213?,flight_status
+Has flight 5151 been delayed by weather?,flight_status
+Is flight 6262 landing ahead of schedule?,flight_status
+Do you have any new updates on flight 1414?,flight_status
+Has flight 9292 cleared for takeoff?,flight_status
+Is flight 4749 experiencing technical issues?,flight_status
+Can you check the reschedule time for flight 3838?,flight_status
+Is flight 7979 still grounded?,flight_status
+What time does flight 6868 arrive?,flight_status
+Is there a gate change for flight 5959?,flight_status
+Can I get a real-time update on flight 3435?,flight_status
+How late is flight 4343?,flight_status
+Has flight 8585 started boarding?,flight_status
+Is flight 7676 boarding now?,flight_status
+What’s the expected time for flight 9091?,flight_status
+Is flight 7171 canceled or delayed?,flight_status
+Can you confirm the boarding time for flight 1010?,flight_status
+Is flight 2323 expected to arrive early?,flight_status
+Has flight 4545 reported any issues?,flight_status
+Is flight 6363 currently in the air?,flight_status
+Please provide updates on flight 8282.,flight_status
+Is flight 5353 departing from gate 12?,flight_status
+What’s the status of flight 6767?,flight_status
+Can you verify the timing for flight 4141?,flight_status
+I need to check on flight 7878's departure time.,flight_status
+Has flight 3939 been delayed at the gate?,flight_status
+What’s the current location of flight 9595?,flight_status
+Is flight 2728 canceled or on schedule?,flight_status
+What is flight 6565’s estimated arrival time?,flight_status
+Please check the latest update on flight 5454.,flight_status
+Is flight 7474 delayed by weather conditions?,flight_status
+Can you confirm the departure of flight 3839?,flight_status
+I need information on flight 8484’s status.,flight_status
+"Has airplane <MASKED_FLIGHT_NUM> been delayed, or is it on time?",flight_status
+Has there been a schedule change for airplane <MASKED_FLIGHT_NUM>?,flight_status
+Can you check if airplane <MASKED_FLIGHT_NUM> is running on schedule?,flight_status
+Can you confirm the departure status of flight <MASKED_FLIGHT_NUM>?,flight_status
+Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?,flight_status
+Has the schedule for service <MASKED_FLIGHT_NUM> changed?,flight_status
+Is flight <MASKED_FLIGHT_NUM> currently running on time?,flight_status
+Can you check if the plane <MASKED_FLIGHT_NUM> is on schedule today?,flight_status
+What’s the update on flight <MASKED_FLIGHT_NUM>? Is it on schedule?,flight_status
+"Has flight <MASKED_FLIGHT_NUM> been delayed, or is it running on time?",flight_status
+Do you know the current departure time for flight <MASKED_FLIGHT_NUM>?,flight_status
+Can you provide the latest status of flight <MASKED_FLIGHT_NUM>?,flight_status
+Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?,flight_status
+What’s the expected departure time for service <MASKED_FLIGHT_NUM>?,flight_status
+Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?,flight_status
+"Has flight <MASKED_FLIGHT_NUM> been delayed, or is it on time?",flight_status
+Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?,flight_status
+Can you check if the airplane <MASKED_FLIGHT_NUM> is on schedule?,flight_status
+Could you tell me if airplane <MASKED_FLIGHT_NUM> is on schedule?,flight_status
+Is the flight number <MASKED_FLIGHT_NUM> still expected to depart on time?,flight_status
+"Has flight <MASKED_FLIGHT_NUM> been delayed, or is it running on time?",flight_status
+Has the schedule for service <MASKED_FLIGHT_NUM> changed?,flight_status
+Can I get a confirmation that service <MASKED_FLIGHT_NUM> is on time?,flight_status
+Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?,flight_status
+Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?,flight_status
+What’s the expected departure schedule for plane <MASKED_FLIGHT_NUM>?,flight_status
+Can you verify if flight <MASKED_FLIGHT_NUM> is still on time?,flight_status
+Do you know if flight <MASKED_FLIGHT_NUM> is scheduled to leave soon?,flight_status
+Can you check if airplane <MASKED_FLIGHT_NUM> is running on schedule?,flight_status
+Is the plane <MASKED_FLIGHT_NUM> on time or facing delays?,flight_status
+Can you confirm if plane <MASKED_FLIGHT_NUM> is departing as scheduled?,flight_status
+Is flight <MASKED_FLIGHT_NUM> still scheduled to leave on time?,flight_status
+Is flight <MASKED_FLIGHT_NUM> confirmed to leave as scheduled?,flight_status
+Could you check if service <MASKED_FLIGHT_NUM> is on schedule?,flight_status
+Can you tell me if flight <MASKED_FLIGHT_NUM> is still leaving on time?,flight_status
+"Has flight <MASKED_FLIGHT_NUM> been delayed, or is it on time?",flight_status
+Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?,flight_status
+Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?,flight_status
+Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?,flight_status
+Can you confirm that service <MASKED_FLIGHT_NUM> is departing on schedule?,flight_status
+Can you confirm if the aircraft <MASKED_FLIGHT_NUM> is running as planned?,flight_status
+What’s the current departure schedule for flight <MASKED_FLIGHT_NUM>?,flight_status
+Can you verify if service <MASKED_FLIGHT_NUM> is departing soon?,flight_status
+Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?,flight_status
+Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?,flight_status
+Has there been any change in the schedule for flight <MASKED_FLIGHT_NUM>?,flight_status
+Is the airplane <MASKED_FLIGHT_NUM> departing on time today?,flight_status
+Can you confirm that aircraft <MASKED_FLIGHT_NUM> is leaving as planned?,flight_status
+Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?,flight_status
+Is flight <MASKED_FLIGHT_NUM> confirmed to leave on schedule?,flight_status
+Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?,flight_status
+Is airplane <MASKED_FLIGHT_NUM> still on time?,flight_status
+Is flight <MASKED_FLIGHT_NUM> confirmed to leave on schedule?,flight_status
+Can you check the schedule for flight <MASKED_FLIGHT_NUM>?,flight_status
+Can I get a confirmation that service <MASKED_FLIGHT_NUM> is on time?,flight_status
+Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?,flight_status
+Can you verify if service <MASKED_FLIGHT_NUM> is departing soon?,flight_status
+Can you confirm that service <MASKED_FLIGHT_NUM> is departing on schedule?,flight_status
+Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?,flight_status
+Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?,flight_status
+Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?,flight_status
+Can you confirm the departure status of flight <MASKED_FLIGHT_NUM>?,flight_status
+Has the schedule for service <MASKED_FLIGHT_NUM> changed?,flight_status
+Is flight <MASKED_FLIGHT_NUM> currently running on time?,flight_status
+Has the schedule for service <MASKED_FLIGHT_NUM> changed?,flight_status
+Can you confirm if plane <MASKED_FLIGHT_NUM> is departing as scheduled?,flight_status
+Can you check if airplane <MASKED_FLIGHT_NUM> is leaving as planned?,flight_status
+Is flight <MASKED_FLIGHT_NUM> still expected to depart as planned?,flight_status
+Is the plane <MASKED_FLIGHT_NUM> on time or facing delays?,flight_status
+Has there been any change in the schedule for flight <MASKED_FLIGHT_NUM>?,flight_status
+What’s the departure status of flight <MASKED_FLIGHT_NUM>? Is it on time?,flight_status
+Do you know the current departure time for service <MASKED_FLIGHT_NUM>?,flight_status
+Is flight <MASKED_FLIGHT_NUM> still expected to depart as planned?,flight_status
+Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?,flight_status
+Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?,flight_status
+Is the plane <MASKED_FLIGHT_NUM> leaving as planned?,flight_status
+Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?,flight_status
+Can you check the schedule for flight <MASKED_FLIGHT_NUM>?,flight_status
+Has the schedule for service <MASKED_FLIGHT_NUM> changed?,flight_status
+Can you tell me if flight <MASKED_FLIGHT_NUM> is still leaving on time?,flight_status
+Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?,flight_status
+Can you tell me about the status of service <MASKED_FLIGHT_NUM>?,flight_status
+What’s the latest update on aircraft <MASKED_FLIGHT_NUM>? Is it on time?,flight_status
+Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?,flight_status
+"Has flight <MASKED_FLIGHT_NUM> been delayed, or is it running on time?",flight_status
+What’s the departure schedule for flight <MASKED_FLIGHT_NUM>?,flight_status
+Do you know the current departure time for flight <MASKED_FLIGHT_NUM>?,flight_status
+Is airplane <MASKED_FLIGHT_NUM> still on time?,flight_status
+Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?,flight_status
+Can you tell me if plane <MASKED_FLIGHT_NUM> is on time?,flight_status
+Is the plane <MASKED_FLIGHT_NUM> leaving as planned?,flight_status
+Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?,flight_status
+Is the flight number <MASKED_FLIGHT_NUM> still expected to depart on time?,flight_status
+Can you tell me about the status of service <MASKED_FLIGHT_NUM>?,flight_status
+Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?,flight_status
+Can I get an update on aircraft <MASKED_FLIGHT_NUM>? Is it on time?,flight_status
+Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?,flight_status
+Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?,flight_status
+What’s the latest on flight <MASKED_FLIGHT_NUM>? Is it on time?,flight_status
+Is my flight on time?,flight_status
+Has my flight been delayed?,flight_status
+Is my flight departing on time?,flight_status
+What time is my flight scheduled to depart?,flight_status
+Is my flight arriving on time?,flight_status
+Are there any delays for my flight?,flight_status
+Has my flight been canceled?,flight_status
+Is my flight still on track?,flight_status
+Can you confirm my flight's departure time?,flight_status
+What is the status of my flight?,flight_status
+Is my flight running late?,flight_status
+When is my flight supposed to land?,flight_status
+Is there any delay for my flight today?,flight_status
+How is the status of my flight?,flight_status
+Can you tell me if my flight is on time?,flight_status
+Is my flight affected by any cancellations?,flight_status
+When is my flight arriving?,flight_status
+Are there any issues with my flight?,flight_status
+Will my flight depart as scheduled?,flight_status
+Is my flight on schedule?,flight_status
+What is the current status of my flight?,flight_status
+Is my flight departing as planned?,flight_status
+What time is my flight supposed to take off?,flight_status
+Has the schedule for my flight changed?,flight_status
+Is my flight delayed today?,flight_status
+Is my flight expected to arrive on time?,flight_status
+Will my flight leave as scheduled?,flight_status
+Is there a delay in the arrival of my flight?,flight_status
+Is my flight running according to plan?,flight_status
+Can you check the status of my flight?,flight_status
+What time will my flight land?,flight_status
+Is my flight expected to depart soon?,flight_status
+Has the departure time for my flight been updated?,flight_status
+What is the estimated arrival time of my flight?,flight_status
+Is my flight affected by weather conditions?,flight_status
+What is the delay for my flight?,flight_status
+Has my flight been rescheduled?,flight_status
+Can you tell me when my flight will land?,flight_status
+Is my flight departing on time today?,flight_status
+How is my flight progressing?,flight_status
+Is my flight expected to be delayed?,flight_status
+What is my flight status right now?,flight_status
+Can you confirm if my flight is delayed?,flight_status
+Will my flight depart on time today?,flight_status
+Has my flight been delayed by any reason?,flight_status
+Is my flight arriving according to schedule?,flight_status
+What time does my flight arrive?,flight_status
+Is the departure of my flight delayed?,flight_status
+When is the next update on my flight?,flight_status
+Can you provide an update on the status of my flight?,flight_status
+Is my flight affected by any traffic delays?,flight_status
+Is my flight expected to depart late?,flight_status
+When does my flight land?,flight_status
+Has my flight been rescheduled or delayed?,flight_status
+Is the status of my flight still the same?,flight_status
+Will my flight depart as planned today?,flight_status
+What is the scheduled landing time of my flight?,flight_status
+Can you check if my flight is on time?,flight_status
+Has there been any change in the schedule for my flight?,flight_status
+Is my flight on time or delayed?,flight_status
+What is the current delay for my flight?,flight_status
+When does my flight take off?,flight_status
+What is the current departure time for my flight?,flight_status
+Is my flight currently delayed?,flight_status
+Can you confirm if my flight is on time today?,flight_status
+When will my flight depart?,flight_status
+Has the time for my flight changed?,flight_status
+What is the estimated departure time for my flight?,flight_status
+Can you check the flight status for my flight?,flight_status
+Has there been any update on my flight?,flight_status
+When is the expected departure for my flight?,flight_status
+Is my flight on schedule or delayed?,flight_status
+What time is my flight expected to leave?,flight_status
+Can you confirm if my flight has been delayed?,flight_status
+Is my flight going to arrive as planned?,flight_status
+Is the departure for my flight delayed today?,flight_status
+When is the scheduled arrival time of my flight?,flight_status
+Is there a delay in the arrival of my flight today?,flight_status
+Can you check if there are any changes to the schedule of my flight?,flight_status
+Is my flight going to depart on time today?,flight_status
+When is my flight scheduled to arrive?,flight_status
+Is my flight experiencing any delays?,flight_status
+What time should I expect my flight to depart?,flight_status
+Is my flight still departing on time?,flight_status
+Has my flight been rescheduled?,flight_status
+What is the estimated arrival time for my flight?,flight_status
+What is the current arrival time for my flight?,flight_status
+Is my flight delayed or on time?,flight_status
+Has there been any new update for my flight?,flight_status
+Is my flight on time right now?,flight_status
+What time is my flight expected to take off?,flight_status
+When does my flight arrive today?,flight_status
+Can you check the delay status of my flight?,flight_status
+What is the delay time for my flight?,flight_status
+Will my flight depart at the scheduled time?,flight_status
+Has my flight been affected by weather?,flight_status
+Is my flight going to depart as scheduled?,flight_status
+Can you tell me the arrival time of my flight?,flight_status
+Is there a delay for my flight today?,flight_status
+What is the current status for my flight?,flight_status
+Is my flight going to arrive on time today?,flight_status
+Is my flight running according to the original schedule?,flight_status
+Has the time for my flight been adjusted?,flight_status
+Can you provide the status update for my flight?,flight_status
+Will my flight depart on time or be delayed?,flight_status
+What is the expected arrival for my flight?,flight_status
+When is the latest time for my flight to depart?,flight_status
+Can you tell me if my flight is on time?,flight_status
+Is there any change to the schedule for my flight?,flight_status
+What is the current status of my flight?,flight_status
+Is my flight expected to depart soon?,flight_status
+Is my flight arriving as scheduled?,flight_status
+When will my flight take off?,flight_status
+Is my flight arriving soon?,flight_status
+Will my flight be delayed?,flight_status
+When is the next update for my flight?,flight_status
+Is there any issue with my flight?,flight_status
+When does my flight depart?,flight_status
+Can you tell me if my flight will be delayed?,flight_status
+Has there been any schedule change for my flight?,flight_status
+Is my flight delayed or on time today?,flight_status
+Will my flight depart as planned?,flight_status
+Is my flight on time for today?,flight_status
+What is the current expected arrival for my flight?,flight_status
+Can you provide the departure status for my flight?,flight_status
+Is my flight delayed for any reason?,flight_status
+When is the next scheduled arrival for my flight?,flight_status
+Can you check if my flight is running on time?,flight_status
+What is the expected time of departure for my flight?,flight_status
+When will my flight land?,flight_status
+Is there any delay for my flight today?,flight_status
+What time is my flight expected to arrive today?,flight_status
+Can you confirm if my flight is departing on time?,flight_status
+When does my flight depart from the airport?,flight_status
+Is my flight arriving late today?,flight_status
+What time should I expect to board my flight?,flight_status
+Is my flight leaving at the scheduled time?,flight_status
+When is my flight scheduled to take off?,flight_status
+Will there be any delay for my flight?,flight_status
+Can you check if my flight will depart on time?,flight_status
+What time is my flight landing?,flight_status
+Has my flight been delayed by weather conditions?,flight_status
+What is the current departure time for my flight?,flight_status
+Is my flight departing according to schedule?,flight_status
+When is my flight expected to arrive?,flight_status
+Can I get my flight status?,flight_status
+May I know if my flight is as scheduled?,flight_status
+How can I book a flight to New York?,generic_query
+What is the baggage allowance for international flights?,generic_query
+Can I change my seat after booking?,generic_query
+What documents do I need for domestic flights?,generic_query
+Are there any discounts for early bookings?,generic_query
+How do I cancel my flight ticket?,generic_query
+Is there a fee for rescheduling my flight?,generic_query
+How long before departure should I arrive at the airport?,generic_query
+What is the policy for carrying liquids in hand luggage?,generic_query
+Can I bring my pet on board?,generic_query
+What happens if I miss my connecting flight?,generic_query
+How do I request a wheelchair for my flight?,generic_query
+Are meals included in economy class?,generic_query
+What are the check-in options available?,generic_query
+Can I upgrade to business class after booking?,generic_query
+How can I track my baggage after landing?,generic_query
+Is there Wi-Fi available on the flight?,generic_query
+What are the COVID-19 travel requirements?,generic_query
+How do I earn frequent flyer miles?,generic_query
+What are the restrictions on carry-on luggage size?,generic_query
+Can I book a flight for someone else?,generic_query
+How do I contact customer service regarding my flight?,generic_query
+Is there in-flight entertainment available?,generic_query
+What are the refund policies for canceled flights?,generic_query
+Can I request a window seat during booking?,generic_query
+How do I know if my flight is overbooked?,generic_query
+What is the maximum weight for checked baggage?,generic_query
+Can I carry medical equipment on board?,generic_query
+What is the minimum age for unaccompanied minors?,generic_query
+Are airport lounges accessible to all passengers?,generic_query
+How do I upgrade my seat to first class?,generic_query
+Can I get a refund for a delayed flight?,generic_query
+How much does extra baggage cost?,generic_query
+What is the in-flight entertainment like on long-haul flights?,generic_query
+Are there family discounts for group bookings?,generic_query
+What are the vaccination requirements for international flights?,generic_query
+How do I check the weather for my destination before flying?,generic_query
+What should I do if I lose my boarding pass?,generic_query
+How can I pay for flight tickets online?,generic_query
+What types of meals are served in business class?,generic_query
+How can I report lost luggage?,generic_query
+Can I bring my own food on the flight?,generic_query
+How do I request a special meal for dietary restrictions?,generic_query
+Is there priority boarding for pregnant passengers?,generic_query
+What is the cost for adding extra legroom seats?,generic_query
+How do I know if my flight has been rescheduled?,generic_query
+Are there designated smoking areas at airports?,generic_query
+How early can I check in for my flight?,generic_query
+What should I do if my flight gets canceled at the airport?,generic_query
+How do I claim compensation for a delayed flight?,generic_query
+Is there a limit to how much duty-free I can carry?,generic_query
+Can I request an airport pickup service?,generic_query
+What happens if I forget my ID at the airport?,generic_query
+How do I check seat availability before booking?,generic_query
+Can I transfer my ticket to another person?,generic_query
+Are there restrictions for flying with infants?,generic_query
+Can I add an additional stopover to my journey?,generic_query
+How do I check the loyalty program benefits?,generic_query
+Are electric devices allowed in the cabin?,generic_query
+What are the safety procedures during turbulence?,generic_query
+Can I book an open-ended return flight?,generic_query
+What is the refund process for unused tickets?,generic_query
+How can I extend my stay after booking?,generic_query
+Is travel insurance included in the ticket price?,generic_query
+Can I book a flight with multiple destinations?,generic_query
+How can I apply for a travel visa through the airline?,generic_query
+What happens if my baggage is overweight?,generic_query
+Are there mobile apps for flight status tracking?,generic_query
+Can I pre-order duty-free items on board?,generic_query
+What are the policies for emergency exits seating?,generic_query
+How do I register for flight alerts?,generic_query
+Can I check my child’s seat for safety regulations?,generic_query
+What should I do if my baggage is damaged?,generic_query
+Is there a direct flight to my destination?,generic_query
+How do I book flights with flexible dates?,generic_query
+Can I cancel my flight within 24 hours?,generic_query
+What is the cancellation fee for international flights?,generic_query
+Are there exclusive deals for students?,generic_query
+How can I rebook a missed flight?,generic_query
+How do I track my layover times?,generic_query
+Are pets allowed in the cabin or cargo hold?,generic_query
+Can I request an interpreter for international flights?,generic_query
+What should I do if my flight is overbooked?,generic_query
+Can you help me book a ticket?,generic_query
+Can you help me cancel my booking?,generic_query
+Can you help me change my flight time?,generic_query
+Can you tell me baggage policies?,generic_query
