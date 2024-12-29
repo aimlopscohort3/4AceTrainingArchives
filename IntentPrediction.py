@@ -90,7 +90,7 @@ training_args = TrainingArguments(
     learning_rate=2e-5,
     per_device_train_batch_size=8,
     per_device_eval_batch_size=8,
-    num_train_epochs=5,
+    num_train_epochs=10,
     weight_decay=0.01,
     save_total_limit=1,
     load_best_model_at_end=True,
@@ -119,6 +119,14 @@ tokenizer.save_pretrained("./intent_model")
 def predict_intent(query, model, tokenizer, label_map):
     model.eval()
     inputs = tokenizer(query, return_tensors="pt", padding="max_length", truncation=True, max_length=128)
+    ##Added code for device
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    model = model.to(device)       # Move the model to GPU/CPU
+    inputs = inputs.to(device)         # Move input tensors to GPU/CPU
+
+
+    ##Added code for device
     with torch.no_grad():
         outputs = model(**inputs)
         logits = outputs.logits
