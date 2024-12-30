@@ -2,1287 +2,1287 @@ import csv
 import random
 
 # Define the variations of prompts and statuses
-flight_synonyms = ["flight", "airplane", "plane", "aircraft", "jet", "carrier", "airline", "service"]
-gate_number = ["gate", "boarding gate", "departure gate", "boarding area", "flight gate", "terminal gate", "gate location", "departure point", "entry gate", "boarding station", "check-in gate", "airside gate", "flight entry gate", "boarding zone", "passenger gate", "terminal entrance", "flight access point", "gate position", "entryway"]
+flight_synonyms = ["flight" "airplane" "plane" "aircraft" "jet" "carrier" "airline" "service"]
+gate_number = ["gate" "boarding gate" "departure gate" "boarding area" "flight gate" "terminal gate" "gate location" "departure point" "entry gate" "boarding station" "check-in gate" "airside gate" "flight entry gate" "boarding zone" "passenger gate" "terminal entrance" "flight access point" "gate position" "entryway"]
 prompt_templates = [
-    "Is the flight <MASKED_FLIGHT_NUM> on time?",
-    "Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?",
-    "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?",
-    "Is airplane <MASKED_FLIGHT_NUM> still on time?",
-    "Can you check the schedule for flight <MASKED_FLIGHT_NUM>?",
-    "Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?",
-    "Do you have updates on flight <MASKED_FLIGHT_NUM>? Is it on time?",
-    "Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?",
-    "Has airplane <MASKED_FLIGHT_NUM> been delayed, or is it on time?",
-    "Can you tell me if service <MASKED_FLIGHT_NUM> is running on time?",
-    "Is the flight number <MASKED_FLIGHT_NUM> still expected to depart on time?",
-    "Can you check if the airplane <MASKED_FLIGHT_NUM> is on schedule?",
-    "Do you know if the plane <MASKED_FLIGHT_NUM> is leaving on time?",
-    "Can you confirm the departure time for flight <MASKED_FLIGHT_NUM>?",
-    "Is aircraft <MASKED_FLIGHT_NUM> still departing as planned?",
-    "Can I get the current status of airplane <MASKED_FLIGHT_NUM>?",
-    "What’s the departure status of flight <MASKED_FLIGHT_NUM>? Is it on time?",
-    "Can you confirm that service <MASKED_FLIGHT_NUM> is departing on schedule?",
-    "Has there been any change in the schedule for flight <MASKED_FLIGHT_NUM>?",
-    "Can you verify if plane <MASKED_FLIGHT_NUM> is departing on time?",
-    "What’s the current status of flight <MASKED_FLIGHT_NUM>?",
-    "Is service <MASKED_FLIGHT_NUM> expected to leave on time?",
-    "Could you tell me if airplane <MASKED_FLIGHT_NUM> is on schedule?",
-    "What’s the latest update on aircraft <MASKED_FLIGHT_NUM>? Is it on time?",
-    "Can I get a confirmation that service <MASKED_FLIGHT_NUM> is on time?",
-    "Is flight <MASKED_FLIGHT_NUM> still expected to depart as planned?",
-    "Do you know if flight <MASKED_FLIGHT_NUM> is scheduled to leave soon?",
-    "Could you check the status of airplane <MASKED_FLIGHT_NUM>? Is it on time?",
-    "Can you tell me if plane <MASKED_FLIGHT_NUM> is on time?",
-    "Is the aircraft <MASKED_FLIGHT_NUM> currently running on time?",
-    "What’s the departure schedule for flight <MASKED_FLIGHT_NUM>?",
-    "Has the schedule for service <MASKED_FLIGHT_NUM> changed?",
-    "Can you confirm if plane <MASKED_FLIGHT_NUM> is departing as scheduled?",
-    "Is service <MASKED_FLIGHT_NUM> expected to leave on time today?",
-    "Do you know the current departure time for flight <MASKED_FLIGHT_NUM>?",
-    "Is the airplane <MASKED_FLIGHT_NUM> on time, or has there been a delay?",
-    "Can you confirm that aircraft <MASKED_FLIGHT_NUM> is leaving as planned?",
-    "Is flight <MASKED_FLIGHT_NUM> still scheduled to leave on time?",
-    "Do you have any updates about service <MASKED_FLIGHT_NUM>?",
-    "What’s the departure update for airplane <MASKED_FLIGHT_NUM>?",
-    "Can you check if the plane <MASKED_FLIGHT_NUM> is on schedule today?",
-    "Do you know if flight <MASKED_FLIGHT_NUM> is running on time?",
-    "Can I get an update on aircraft <MASKED_FLIGHT_NUM>? Is it on time?",
-    "Can you tell me about the status of service <MASKED_FLIGHT_NUM>?",
-    "Is flight <MASKED_FLIGHT_NUM> confirmed to leave on time?",
-    "Can you verify if service <MASKED_FLIGHT_NUM> is departing soon?",
-    "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?",
-    "Can you confirm if the aircraft <MASKED_FLIGHT_NUM> is running as planned?",
-    "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?",
-    "What’s the update on flight <MASKED_FLIGHT_NUM>? Is it on schedule?",
-    "Is the airplane <MASKED_FLIGHT_NUM> confirmed to depart as planned?",
-    "Can you provide the latest status of flight <MASKED_FLIGHT_NUM>?",
-    "Do you have any updates on airplane <MASKED_FLIGHT_NUM>? Is it on time?",
-    "What’s the expected departure time for service <MASKED_FLIGHT_NUM>?",
-    "Is flight <MASKED_FLIGHT_NUM> currently running on time?",
-    "Has there been a schedule change for airplane <MASKED_FLIGHT_NUM>?",
-    "Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?",
-    "Could you check if service <MASKED_FLIGHT_NUM> is on schedule?",
-    "Do you know if plane <MASKED_FLIGHT_NUM> is running on time today?",
-    "What’s the current departure status of flight <MASKED_FLIGHT_NUM>?",
-    "Can I get confirmation that flight <MASKED_FLIGHT_NUM> is on schedule?",
-    "Is the plane <MASKED_FLIGHT_NUM> leaving as planned?",
-    "Can you check if airplane <MASKED_FLIGHT_NUM> is running on schedule?",
-    "Has flight <MASKED_FLIGHT_NUM> been delayed, or is it on time?",
-    "Can you provide the current status of flight <MASKED_FLIGHT_NUM>?",
-    "What’s the latest departure update for plane <MASKED_FLIGHT_NUM>?",
-    "Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?",
-    "Is the airplane <MASKED_FLIGHT_NUM> departing on time today?",
-    "Can you confirm that plane <MASKED_FLIGHT_NUM> is running as scheduled?",
-    "What’s the latest on flight <MASKED_FLIGHT_NUM>? Is it on time?",
-    "Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?",
-    "Can you confirm the departure status of flight <MASKED_FLIGHT_NUM>?",
-    "What’s the current update for service <MASKED_FLIGHT_NUM>?",
-    "Can you verify if flight <MASKED_FLIGHT_NUM> is still on time?",
-    "Is flight <MASKED_FLIGHT_NUM> confirmed to leave as scheduled?",
-    "What’s the expected departure schedule for plane <MASKED_FLIGHT_NUM>?",
-    "Has there been any change in the schedule for flight <MASKED_FLIGHT_NUM>?",
-    "Can you provide updates about the status of airplane <MASKED_FLIGHT_NUM>?",
-    "Do you know the current departure time for service <MASKED_FLIGHT_NUM>?",
-    "Is the plane <MASKED_FLIGHT_NUM> on time or facing delays?",
-    "Can you check if airplane <MASKED_FLIGHT_NUM> is leaving as planned?",
-    "Has flight <MASKED_FLIGHT_NUM> been delayed, or is it running on time?",
-    "What’s the current departure schedule for flight <MASKED_FLIGHT_NUM>?",
-    "Is flight <MASKED_FLIGHT_NUM> confirmed to leave on schedule?",
-    "Can you tell me if flight <MASKED_FLIGHT_NUM> is still leaving on time?",
+    "Is the flight <MASKED_FLIGHT_NUM> on time?"
+    "Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?"
+    "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?"
+    "Is airplane <MASKED_FLIGHT_NUM> still on time?"
+    "Can you check the schedule for flight <MASKED_FLIGHT_NUM>?"
+    "Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?"
+    "Do you have updates on flight <MASKED_FLIGHT_NUM>? Is it on time?"
+    "Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?"
+    "Has airplane <MASKED_FLIGHT_NUM> been delayed or is it on time?"
+    "Can you tell me if service <MASKED_FLIGHT_NUM> is running on time?"
+    "Is the flight number <MASKED_FLIGHT_NUM> still expected to depart on time?"
+    "Can you check if the airplane <MASKED_FLIGHT_NUM> is on schedule?"
+    "Do you know if the plane <MASKED_FLIGHT_NUM> is leaving on time?"
+    "Can you confirm the departure time for flight <MASKED_FLIGHT_NUM>?"
+    "Is aircraft <MASKED_FLIGHT_NUM> still departing as planned?"
+    "Can I get the current status of airplane <MASKED_FLIGHT_NUM>?"
+    "What’s the departure status of flight <MASKED_FLIGHT_NUM>? Is it on time?"
+    "Can you confirm that service <MASKED_FLIGHT_NUM> is departing on schedule?"
+    "Has there been any change in the schedule for flight <MASKED_FLIGHT_NUM>?"
+    "Can you verify if plane <MASKED_FLIGHT_NUM> is departing on time?"
+    "What’s the current status of flight <MASKED_FLIGHT_NUM>?"
+    "Is service <MASKED_FLIGHT_NUM> expected to leave on time?"
+    "Could you tell me if airplane <MASKED_FLIGHT_NUM> is on schedule?"
+    "What’s the latest update on aircraft <MASKED_FLIGHT_NUM>? Is it on time?"
+    "Can I get a confirmation that service <MASKED_FLIGHT_NUM> is on time?"
+    "Is flight <MASKED_FLIGHT_NUM> still expected to depart as planned?"
+    "Do you know if flight <MASKED_FLIGHT_NUM> is scheduled to leave soon?"
+    "Could you check the status of airplane <MASKED_FLIGHT_NUM>? Is it on time?"
+    "Can you tell me if plane <MASKED_FLIGHT_NUM> is on time?"
+    "Is the aircraft <MASKED_FLIGHT_NUM> currently running on time?"
+    "What’s the departure schedule for flight <MASKED_FLIGHT_NUM>?"
+    "Has the schedule for service <MASKED_FLIGHT_NUM> changed?"
+    "Can you confirm if plane <MASKED_FLIGHT_NUM> is departing as scheduled?"
+    "Is service <MASKED_FLIGHT_NUM> expected to leave on time today?"
+    "Do you know the current departure time for flight <MASKED_FLIGHT_NUM>?"
+    "Is the airplane <MASKED_FLIGHT_NUM> on time or has there been a delay?"
+    "Can you confirm that aircraft <MASKED_FLIGHT_NUM> is leaving as planned?"
+    "Is flight <MASKED_FLIGHT_NUM> still scheduled to leave on time?"
+    "Do you have any updates about service <MASKED_FLIGHT_NUM>?"
+    "What’s the departure update for airplane <MASKED_FLIGHT_NUM>?"
+    "Can you check if the plane <MASKED_FLIGHT_NUM> is on schedule today?"
+    "Do you know if flight <MASKED_FLIGHT_NUM> is running on time?"
+    "Can I get an update on aircraft <MASKED_FLIGHT_NUM>? Is it on time?"
+    "Can you tell me about the status of service <MASKED_FLIGHT_NUM>?"
+    "Is flight <MASKED_FLIGHT_NUM> confirmed to leave on time?"
+    "Can you verify if service <MASKED_FLIGHT_NUM> is departing soon?"
+    "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?"
+    "Can you confirm if the aircraft <MASKED_FLIGHT_NUM> is running as planned?"
+    "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?"
+    "What’s the update on flight <MASKED_FLIGHT_NUM>? Is it on schedule?"
+    "Is the airplane <MASKED_FLIGHT_NUM> confirmed to depart as planned?"
+    "Can you provide the latest status of flight <MASKED_FLIGHT_NUM>?"
+    "Do you have any updates on airplane <MASKED_FLIGHT_NUM>? Is it on time?"
+    "What’s the expected departure time for service <MASKED_FLIGHT_NUM>?"
+    "Is flight <MASKED_FLIGHT_NUM> currently running on time?"
+    "Has there been a schedule change for airplane <MASKED_FLIGHT_NUM>?"
+    "Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?"
+    "Could you check if service <MASKED_FLIGHT_NUM> is on schedule?"
+    "Do you know if plane <MASKED_FLIGHT_NUM> is running on time today?"
+    "What’s the current departure status of flight <MASKED_FLIGHT_NUM>?"
+    "Can I get confirmation that flight <MASKED_FLIGHT_NUM> is on schedule?"
+    "Is the plane <MASKED_FLIGHT_NUM> leaving as planned?"
+    "Can you check if airplane <MASKED_FLIGHT_NUM> is running on schedule?"
+    "Has flight <MASKED_FLIGHT_NUM> been delayed or is it on time?"
+    "Can you provide the current status of flight <MASKED_FLIGHT_NUM>?"
+    "What’s the latest departure update for plane <MASKED_FLIGHT_NUM>?"
+    "Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?"
+    "Is the airplane <MASKED_FLIGHT_NUM> departing on time today?"
+    "Can you confirm that plane <MASKED_FLIGHT_NUM> is running as scheduled?"
+    "What’s the latest on flight <MASKED_FLIGHT_NUM>? Is it on time?"
+    "Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?"
+    "Can you confirm the departure status of flight <MASKED_FLIGHT_NUM>?"
+    "What’s the current update for service <MASKED_FLIGHT_NUM>?"
+    "Can you verify if flight <MASKED_FLIGHT_NUM> is still on time?"
+    "Is flight <MASKED_FLIGHT_NUM> confirmed to leave as scheduled?"
+    "What’s the expected departure schedule for plane <MASKED_FLIGHT_NUM>?"
+    "Has there been any change in the schedule for flight <MASKED_FLIGHT_NUM>?"
+    "Can you provide updates about the status of airplane <MASKED_FLIGHT_NUM>?"
+    "Do you know the current departure time for service <MASKED_FLIGHT_NUM>?"
+    "Is the plane <MASKED_FLIGHT_NUM> on time or facing delays?"
+    "Can you check if airplane <MASKED_FLIGHT_NUM> is leaving as planned?"
+    "Has flight <MASKED_FLIGHT_NUM> been delayed or is it running on time?"
+    "What’s the current departure schedule for flight <MASKED_FLIGHT_NUM>?"
+    "Is flight <MASKED_FLIGHT_NUM> confirmed to leave on schedule?"
+    "Can you tell me if flight <MASKED_FLIGHT_NUM> is still leaving on time?"
 ]
-statuses = ["ON_TIME", "DELAYED", "CANCELLED", "DEPARTED", "BOARDING"]
+statuses = ["ON_TIME" "DELAYED" "CANCELLED" "DEPARTED" "BOARDING"]
 
 # Define response templates
 response_templates = {
     "ON_TIME": [
-    "{flight} <MASKED_FLIGHT_NUM> is on time and set to depart at <MASKED_FLIGHT_TIME>.",
-    "The current status of {flight} <MASKED_FLIGHT_NUM> is on time. It will depart as planned at <MASKED_FLIGHT_TIME>.",
-    "Good news! {flight} <MASKED_FLIGHT_NUM> is on schedule, leaving at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is scheduled to depart on time at <MASKED_FLIGHT_TIME>.",
-    "Everything looks good for {flight} <MASKED_FLIGHT_NUM>. It’s leaving on time at <MASKED_FLIGHT_TIME>.",
-    "The status for {flight} <MASKED_FLIGHT_NUM> is on time. Departure is at <MASKED_FLIGHT_TIME>.",
-    "Rest assured, {flight} <MASKED_FLIGHT_NUM> is running on time and will depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is on track to depart as scheduled at <MASKED_FLIGHT_TIME>.",
-    "No delays for {flight} <MASKED_FLIGHT_NUM>. Departure remains at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME>, as scheduled.",
-    "{flight} <MASKED_FLIGHT_NUM> is on time with a departure time of <MASKED_FLIGHT_TIME>.",
-    "Enjoy your journey! {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is on time and set to leave at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has no delays and is leaving on time at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is on time and ready for an on-schedule departure at <MASKED_FLIGHT_TIME>.",
-    "The schedule for {flight} <MASKED_FLIGHT_NUM> remains unchanged. It’s leaving at <MASKED_FLIGHT_TIME>.",
-    "You can count on {flight} <MASKED_FLIGHT_NUM> departing at <MASKED_FLIGHT_TIME> as planned.",
-    "No updates are needed; {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>.",
-    "Relax, {flight} <MASKED_FLIGHT_NUM> is on time and set for <MASKED_FLIGHT_TIME>.",
-    "Everything is in order for {flight} <MASKED_FLIGHT_NUM>. It departs at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is on time and will depart promptly at <MASKED_FLIGHT_TIME>.",
-    "No worries! {flight} <MASKED_FLIGHT_NUM> is running on time and departing at <MASKED_FLIGHT_TIME>.",
-    "The planned departure time for {flight} <MASKED_FLIGHT_NUM> is still <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is all set to leave at <MASKED_FLIGHT_TIME> with no delays.",
-    "You’re good to go! {flight} <MASKED_FLIGHT_NUM> is leaving at <MASKED_FLIGHT_TIME>.",
-    "The status for {flight} <MASKED_FLIGHT_NUM> is unchanged. Departure at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is on schedule and leaving on time at <MASKED_FLIGHT_TIME>.",
-    "Timely as planned, {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>.",
-    "The departure for {flight} <MASKED_FLIGHT_NUM> is confirmed on time for <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is on time and leaves at <MASKED_FLIGHT_TIME>.",
-    "All systems go! {flight} <MASKED_FLIGHT_NUM> is on time for departure at <MASKED_FLIGHT_TIME>.",
-    "No delays have been reported. {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is departing on time as scheduled for <MASKED_FLIGHT_TIME>.",
-    "Smooth travels! {flight} <MASKED_FLIGHT_NUM> is on time for a <MASKED_FLIGHT_TIME> departure.",
-    "Good news! {flight} <MASKED_FLIGHT_NUM> has no changes to its schedule, leaving at <MASKED_FLIGHT_TIME>.",
-    "The departure of {flight} <MASKED_FLIGHT_NUM> remains on time for <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is on time and ready to depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is on schedule and set to leave promptly at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is sticking to the schedule and departs at <MASKED_FLIGHT_TIME>.",
-    "Exciting news! {flight} <MASKED_FLIGHT_NUM> is on time and departing at <MASKED_FLIGHT_TIME>.",
-    "Travel plans are intact; {flight} <MASKED_FLIGHT_NUM> leaves at <MASKED_FLIGHT_TIME>.",
-    "The departure for {flight} <MASKED_FLIGHT_NUM> is on time at <MASKED_FLIGHT_TIME>.",
-    "Stay confident! {flight} <MASKED_FLIGHT_NUM> is set to depart on time at <MASKED_FLIGHT_TIME>.",
-    "No worries, your flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME>.",
-    "Nothing has changed; {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is running on time and leaves at <MASKED_FLIGHT_TIME>.",
-    "All checked out! {flight} <MASKED_FLIGHT_NUM> is set for an on-time departure at <MASKED_FLIGHT_TIME>.",
-    "Stay assured, {flight} <MASKED_FLIGHT_NUM> is on track for <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is good to go, leaving at <MASKED_FLIGHT_TIME>.",
-    "No need to worry; {flight} <MASKED_FLIGHT_NUM> leaves at <MASKED_FLIGHT_TIME>.",
-    "Timely as always, {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>.",
-    "On-schedule news! {flight} <MASKED_FLIGHT_NUM> is on time and leaves at <MASKED_FLIGHT_TIME>.",
-    "Flying on time! {flight} <MASKED_FLIGHT_NUM> is scheduled for <MASKED_FLIGHT_TIME>.",
-    "Up-to-date: {flight} <MASKED_FLIGHT_NUM> departs on time at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is timely for its departure at <MASKED_FLIGHT_TIME>.",
-    "Solid confirmation: {flight} <MASKED_FLIGHT_NUM> leaves on time for <MASKED_FLIGHT_TIME>.",
-    "The schedule for {flight} <MASKED_FLIGHT_NUM> remains unchanged at <MASKED_FLIGHT_TIME>.",
-    "Yes, {flight} <MASKED_FLIGHT_NUM> is leaving as planned at <MASKED_FLIGHT_TIME>.",
-    "Still scheduled, {flight} <MASKED_FLIGHT_NUM> is on time for <MASKED_FLIGHT_TIME>.",
-    "The flight plan is intact. {flight} <MASKED_FLIGHT_NUM> leaves at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart on time at <MASKED_FLIGHT_TIME>.",
-    "No changes for {flight} <MASKED_FLIGHT_NUM>. It’s leaving as scheduled at <MASKED_FLIGHT_TIME>.",
-    "The status is unchanged for {flight} <MASKED_FLIGHT_NUM>. Departure is on time at <MASKED_FLIGHT_TIME>.",
-    "All clear! {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is ready to depart on time at <MASKED_FLIGHT_TIME>.",
-    "Rest assured, {flight} <MASKED_FLIGHT_NUM> is still on time and departing at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is on time, leaving at <MASKED_FLIGHT_TIME> as planned.",
-    "Great news! {flight} <MASKED_FLIGHT_NUM> has no delays and departs at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> will leave as expected at <MASKED_FLIGHT_TIME>, on time.",
-    "Timely and ready! {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>.",
-    "Your journey is on track! {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>.",
-    "Expect {flight} <MASKED_FLIGHT_NUM> to leave at <MASKED_FLIGHT_TIME>. It’s on time.",
-    "We’re glad to report {flight} <MASKED_FLIGHT_NUM> is still on time for <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is leaving on schedule at <MASKED_FLIGHT_TIME>.",
-    "Everything is on track for {flight} <MASKED_FLIGHT_NUM>. Departure is at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is all set to depart on time at <MASKED_FLIGHT_TIME>.",
-    "The schedule remains intact for {flight} <MASKED_FLIGHT_NUM>. It departs at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is still planned for <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is ready to go and on time for <MASKED_FLIGHT_TIME>.",
-    "Everything’s smooth for {flight} <MASKED_FLIGHT_NUM>. Departure is on time at <MASKED_FLIGHT_TIME>.",
-    "No adjustments for {flight} <MASKED_FLIGHT_NUM>. It’s leaving at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has no changes and departs on time at <MASKED_FLIGHT_TIME>.",
-    "Relax, {flight} <MASKED_FLIGHT_NUM> departs as planned at <MASKED_FLIGHT_TIME>.",
-    "Stay calm! {flight} <MASKED_FLIGHT_NUM> is on schedule for <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> remains on track for <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is moving ahead as scheduled, departing at <MASKED_FLIGHT_TIME>.",
-    "Smooth travel plans for {flight} <MASKED_FLIGHT_NUM>. It’s on time for <MASKED_FLIGHT_TIME>.",
-    "We’re happy to confirm {flight} <MASKED_FLIGHT_NUM> is on time and departs at <MASKED_FLIGHT_TIME>.",
-    "No updates! {flight} <MASKED_FLIGHT_NUM> is leaving on time at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is punctual and leaves at <MASKED_FLIGHT_TIME>.",
-    "Timely departure is expected for {flight} <MASKED_FLIGHT_NUM> at <MASKED_FLIGHT_TIME>.",
-    "We’re on schedule! {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>.",
-    "Trust us, {flight} <MASKED_FLIGHT_NUM> is leaving on time for <MASKED_FLIGHT_TIME>.",
-    "All prepared! {flight} <MASKED_FLIGHT_NUM> is on time for <MASKED_FLIGHT_TIME>.",
-    "No disruptions for {flight} <MASKED_FLIGHT_NUM>. Departure is still <MASKED_FLIGHT_TIME>.",
-    "Expect {flight} <MASKED_FLIGHT_NUM> to depart at <MASKED_FLIGHT_TIME>, on time.",
-    "The schedule holds steady for {flight} <MASKED_FLIGHT_NUM>. Departure is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> remains on time for departure at <MASKED_FLIGHT_TIME>.",
-    "It’s all good! {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> stays on schedule for <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> leaves at <MASKED_FLIGHT_TIME>, no changes reported.",
-    "Stay assured, {flight} <MASKED_FLIGHT_NUM> is leaving on time at <MASKED_FLIGHT_TIME>.",
-    "All systems are ready for {flight} <MASKED_FLIGHT_NUM>. It departs at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> continues to stay on schedule for <MASKED_FLIGHT_TIME>.",
-    "Relax and enjoy! {flight} <MASKED_FLIGHT_NUM> leaves on time at <MASKED_FLIGHT_TIME>.",
-    "Everything is timely for {flight} <MASKED_FLIGHT_NUM>, departing at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is sticking to its departure at <MASKED_FLIGHT_TIME>.",
-    "Have peace of mind; {flight} <MASKED_FLIGHT_NUM> is leaving at <MASKED_FLIGHT_TIME>.",
-    "Travel on time with {flight} <MASKED_FLIGHT_NUM>, departing as scheduled at <MASKED_FLIGHT_TIME>.",
-    "Still on track, {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>.",
-    "We’re happy to report {flight} <MASKED_FLIGHT_NUM> has no delays and departs at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> continues to stay on time and departs at <MASKED_FLIGHT_TIME>.",
-    "The departure remains the same for {flight} <MASKED_FLIGHT_NUM>. It’s leaving at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is leaving as planned on time at <MASKED_FLIGHT_TIME>.",
-    "Stay on time! {flight} <MASKED_FLIGHT_NUM> departs promptly at <MASKED_FLIGHT_TIME>.",
-    "Timely travels for {flight} <MASKED_FLIGHT_NUM>. It leaves on schedule at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is smooth sailing, leaving on time for <MASKED_FLIGHT_TIME>.",
-    "The planned departure time for {flight} <MASKED_FLIGHT_NUM> is still <MASKED_FLIGHT_TIME>.",
-    "On-time travels await you with {flight} <MASKED_FLIGHT_NUM>, departing at <MASKED_FLIGHT_TIME>.",
-    "Feel at ease; {flight} <MASKED_FLIGHT_NUM> is on schedule for <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> will leave as expected at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is on time and set to depart at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is running as scheduled, departing at <MASKED_FLIGHT_TIME>.",
-    "Good news! {flight} <MASKED_FLIGHT_NUM> is on time. The departure is at <MASKED_FLIGHT_TIME>.",
-    "Everything is on track! {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>.",
-    "No delays for {flight} <MASKED_FLIGHT_NUM>. The flight will leave at <MASKED_FLIGHT_TIME>.",
-    "The status of {flight} <MASKED_FLIGHT_NUM> is on time, departing at <MASKED_FLIGHT_TIME>.",
-    "There’s no change in schedule. {flight} <MASKED_FLIGHT_NUM> is on time with departure at <MASKED_FLIGHT_TIME>.",
-    "Perfect! {flight} <MASKED_FLIGHT_NUM> is on time and ready to depart at <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is on time and scheduled to depart at <MASKED_FLIGHT_TIME>.",
-    "Everything is running smoothly. {flight} <MASKED_FLIGHT_NUM> is on time, leaving at <MASKED_FLIGHT_TIME>.",
-    "Great news! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as planned.",
-    "We’re happy to inform you that {flight} <MASKED_FLIGHT_NUM> is on schedule and will depart at <MASKED_FLIGHT_TIME>.",
-    "No delays to report for {flight} <MASKED_FLIGHT_NUM>. Departure is still at <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is on time and departing at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on time. It's scheduled to leave at <MASKED_FLIGHT_TIME>.",
-    "Good news! {flight} <MASKED_FLIGHT_NUM> will take off as planned, at <MASKED_FLIGHT_TIME>.",
-    "On time! {flight} <MASKED_FLIGHT_NUM> is scheduled to depart at <MASKED_FLIGHT_TIME>.",
-    "We’re all set! {flight} <MASKED_FLIGHT_NUM> is on time with a departure at <MASKED_FLIGHT_TIME>.",
-    "No delays reported for {flight} <MASKED_FLIGHT_NUM>. The flight will leave at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on time, and departure is scheduled for <MASKED_FLIGHT_TIME>.",
-    "Everything is proceeding as planned. {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>.",
-    "There are no changes for {flight} <MASKED_FLIGHT_NUM>, it will depart on time at <MASKED_FLIGHT_TIME>.",
-    "We’re excited to confirm that {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>.",
-    "No delays expected for {flight} <MASKED_FLIGHT_NUM>. The flight departs at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is on schedule and will depart at <MASKED_FLIGHT_TIME>.",
-    "Everything is running according to plan. {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on time and departing promptly at <MASKED_FLIGHT_TIME>.",
-    "Good news! {flight} <MASKED_FLIGHT_NUM> is departing as planned at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is scheduled for departure at <MASKED_FLIGHT_TIME> with no delays.",
-    "There’s no delay for {flight} <MASKED_FLIGHT_NUM>. The flight will depart at <MASKED_FLIGHT_TIME> as scheduled.",
-    "We’re happy to let you know that {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>.",
-    "Everything is on track for {flight} <MASKED_FLIGHT_NUM>, departing on time at <MASKED_FLIGHT_TIME>.",
-    "Good news! {flight} <MASKED_FLIGHT_NUM> is on time, and the departure is at <MASKED_FLIGHT_TIME>.",
-    "All systems go for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME> as scheduled.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on time. The departure time is still <MASKED_FLIGHT_TIME>.",
-    "Everything’s set for {flight} <MASKED_FLIGHT_NUM> to depart on time at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is on schedule, with a departure at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>.",
-    "There’s no delay for {flight} <MASKED_FLIGHT_NUM>. The flight departs as scheduled at <MASKED_FLIGHT_TIME>.",
-    "We’re pleased to inform you that {flight} <MASKED_FLIGHT_NUM> is on time and will leave at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> will depart on time. Expect it to leave at <MASKED_FLIGHT_TIME>.",
-    "No delays for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME> as planned.",
-    "We’re happy to report that {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is still on time and scheduled to depart at <MASKED_FLIGHT_TIME>.",
-    "The status of {flight} <MASKED_FLIGHT_NUM> shows no delay. It will depart at <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is scheduled to leave at <MASKED_FLIGHT_TIME> and is on time.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is departing as planned at <MASKED_FLIGHT_TIME>.",
-    "Everything’s going as planned. {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>.",
-    "We’re pleased to confirm that {flight} <MASKED_FLIGHT_NUM> is on time, departing at <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is on schedule for departure at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is confirmed to be on time with a departure at <MASKED_FLIGHT_TIME>.",
-    "Good news! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> with no delays.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is scheduled for departure at <MASKED_FLIGHT_TIME> without any delay.",
-    "All is clear! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as scheduled.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is confirmed on time and departs at <MASKED_FLIGHT_TIME>.",
-    "We have no delays for {flight} <MASKED_FLIGHT_NUM>. The flight will depart at <MASKED_FLIGHT_TIME>.",
-    "We’re happy to inform you that {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>.",
-    "The status of {flight} <MASKED_FLIGHT_NUM> is on time, departing as planned at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is on time and will depart promptly at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is confirmed for departure at <MASKED_FLIGHT_TIME> without any delays.",
-    "We’re pleased to confirm that {flight} <MASKED_FLIGHT_NUM> will depart as scheduled at <MASKED_FLIGHT_TIME>.",
-    "There’s no delay for {flight} <MASKED_FLIGHT_NUM>. It will depart on time at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on time. You can expect departure at <MASKED_FLIGHT_TIME>.",
-    "All systems are a go for {flight} <MASKED_FLIGHT_NUM>. Departure is on time at <MASKED_FLIGHT_TIME>.",
-    "We’re glad to report that {flight} <MASKED_FLIGHT_NUM> is departing as planned at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on time and scheduled to depart at <MASKED_FLIGHT_TIME>.",
-    "We’re happy to inform you that {flight} <MASKED_FLIGHT_NUM> is on schedule and will depart at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is scheduled to depart on time at <MASKED_FLIGHT_TIME>.",
-    "No changes to report! {flight} <MASKED_FLIGHT_NUM> is leaving at <MASKED_FLIGHT_TIME>.",
-    "Everything is running smoothly. {flight} <MASKED_FLIGHT_NUM> departs on time at <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is departing as scheduled at <MASKED_FLIGHT_TIME>.",
-    "We’re excited to confirm that {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>.",
-    "Great news! {flight} <MASKED_FLIGHT_NUM> is on time and scheduled to leave at <MASKED_FLIGHT_TIME>.",
-    "No delays for {flight} <MASKED_FLIGHT_NUM>. It will depart on time at <MASKED_FLIGHT_TIME>.",
-    "Everything’s proceeding on schedule. {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>.",
-    "You’re all set! {flight} <MASKED_FLIGHT_NUM> will leave at <MASKED_FLIGHT_TIME> as scheduled.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart at <MASKED_FLIGHT_TIME>.",
-    "On time and ready! {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME>.",
-    "We’re happy to let you know that {flight} <MASKED_FLIGHT_NUM> is on time for departure at <MASKED_FLIGHT_TIME>.",
-    "There are no delays for {flight} <MASKED_FLIGHT_NUM>. It’s scheduled to depart at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is ready to depart on time at <MASKED_FLIGHT_TIME>.",
-    "The status of {flight} <MASKED_FLIGHT_NUM> is on time, leaving at <MASKED_FLIGHT_TIME>.",
-    "Everything is set for {flight} <MASKED_FLIGHT_NUM> to depart at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> will leave exactly at <MASKED_FLIGHT_TIME> as planned.",
-    "We’re pleased to inform you that {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> without delays.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> will depart promptly at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is all set to depart at <MASKED_FLIGHT_TIME> on time.",
-    "Good news! {flight} <MASKED_FLIGHT_NUM> is on time and departing at <MASKED_FLIGHT_TIME>.",
-    "Everything’s looking good for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is confirmed to depart on time at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is departing on time as scheduled at <MASKED_FLIGHT_TIME>.",
-    "We’ve confirmed that {flight} <MASKED_FLIGHT_NUM> will leave at <MASKED_FLIGHT_TIME> without any delays.",
-    "There are no issues with {flight} <MASKED_FLIGHT_NUM>. It will depart on time at <MASKED_FLIGHT_TIME>.",
-    "We’re happy to confirm that {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> on time.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> as expected.",
-    "Everything is on track for {flight} <MASKED_FLIGHT_NUM>, departing at <MASKED_FLIGHT_TIME> on time.",
-    "The status of {flight} <MASKED_FLIGHT_NUM> is on time, departing at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on schedule, departing at <MASKED_FLIGHT_TIME>.",
-    "No delay for {flight} <MASKED_FLIGHT_NUM>. It’s leaving at <MASKED_FLIGHT_TIME> as planned.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is set to depart at <MASKED_FLIGHT_TIME> without delay.",
-    "Everything is set for a smooth departure. {flight} <MASKED_FLIGHT_NUM> will leave at <MASKED_FLIGHT_TIME>.",
-    "On time! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as scheduled.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is all set to depart at <MASKED_FLIGHT_TIME> on time.",
-    "We’re glad to confirm that {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> without any issues.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart at <MASKED_FLIGHT_TIME> on time.",
-    "There are no delays for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME>.",
-    "Great news! {flight} <MASKED_FLIGHT_NUM> is on schedule and will leave at <MASKED_FLIGHT_TIME>.",
-    "We’re happy to report that {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>.",
-    "No delays for {flight} <MASKED_FLIGHT_NUM>. The flight is on time and leaving at <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is departing at <MASKED_FLIGHT_TIME> without any delays.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is leaving on time at <MASKED_FLIGHT_TIME>.",
-    "Everything is set for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME> on time.",
-    "We’ve confirmed that {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as planned.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is confirmed to depart at <MASKED_FLIGHT_TIME> without any delays.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> without any issues.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart at <MASKED_FLIGHT_TIME> on time.",
-    "We’re pleased to let you know that {flight} <MASKED_FLIGHT_NUM> is on time and leaving at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> will depart promptly at <MASKED_FLIGHT_TIME>.",
-    "We’re happy to report that {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>.",
-    "Everything is proceeding on schedule for {flight} <MASKED_FLIGHT_NUM>. It departs at <MASKED_FLIGHT_TIME>.", 
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is on time and will depart at <MASKED_FLIGHT_TIME>.",
-    "Good news! {flight} <MASKED_FLIGHT_NUM> is set to depart on time at <MASKED_FLIGHT_TIME>.",
-    "The status of {flight} <MASKED_FLIGHT_NUM> is on time. It will depart at <MASKED_FLIGHT_TIME>.",
-    "Everything looks great! {flight} <MASKED_FLIGHT_NUM> is scheduled to leave at <MASKED_FLIGHT_TIME>.",
-    "No delays for {flight} <MASKED_FLIGHT_NUM>. It's on time and leaving at <MASKED_FLIGHT_TIME>.",
-    "We’ve confirmed that {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>.",
-    "Everything is on schedule for {flight} <MASKED_FLIGHT_NUM>. Departure is at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is leaving as planned at <MASKED_FLIGHT_TIME>.",
-    "We can confirm that {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>.",
-    "No changes to report! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>.",
-    "Everything’s running smoothly for {flight} <MASKED_FLIGHT_NUM>. It’s on time for departure at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME>, as scheduled.",
-    "We’re happy to confirm that {flight} <MASKED_FLIGHT_NUM> is on time and departing at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> will depart promptly at <MASKED_FLIGHT_TIME>.",
-    "There are no issues. {flight} <MASKED_FLIGHT_NUM> is scheduled to leave at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is ready to depart on time at <MASKED_FLIGHT_TIME>.",
-    "You’re all set! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as planned.",
-    "The departure time for {flight} <MASKED_FLIGHT_NUM> is confirmed at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME> as scheduled.",
-    "Everything is on track for {flight} <MASKED_FLIGHT_NUM>. It departs on time at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> without delay.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is departing as expected at <MASKED_FLIGHT_TIME>.",
-    "Great news! {flight} <MASKED_FLIGHT_NUM> is scheduled to leave at <MASKED_FLIGHT_TIME> on time.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> will depart promptly at <MASKED_FLIGHT_TIME> as scheduled.",
-    "The departure for {flight} <MASKED_FLIGHT_NUM> is on time, and it will leave at <MASKED_FLIGHT_TIME>.",
-    "Everything’s set for your flight {flight} <MASKED_FLIGHT_NUM>. It will leave at <MASKED_FLIGHT_TIME> on time.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart at <MASKED_FLIGHT_TIME>.",
-    "We’re pleased to let you know that {flight} <MASKED_FLIGHT_NUM> is on time and leaving at <MASKED_FLIGHT_TIME>.",
-    "There are no delays. {flight} <MASKED_FLIGHT_NUM> is on time for departure at <MASKED_FLIGHT_TIME>.",
-    "We’re happy to confirm that {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> with no delays.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> will depart as planned at <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is all set to leave on time at <MASKED_FLIGHT_TIME>.",
-    "We’ve confirmed that {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>.",
-    "On schedule! {flight} <MASKED_FLIGHT_NUM> is set to depart at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is leaving on time at <MASKED_FLIGHT_TIME> as scheduled.",
-    "Everything looks great for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on track and departing at <MASKED_FLIGHT_TIME>.",
-    "We’re happy to report that {flight} <MASKED_FLIGHT_NUM> will leave on time at <MASKED_FLIGHT_TIME>.",
-    "Good news! {flight} <MASKED_FLIGHT_NUM> is on time for departure at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as scheduled.",
-    "Everything’s in order for {flight} <MASKED_FLIGHT_NUM>. It’s leaving at <MASKED_FLIGHT_TIME> on time.",
-    "There are no delays for {flight} <MASKED_FLIGHT_NUM>. It’s departing on time at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> will depart as planned at <MASKED_FLIGHT_TIME>.",
-    "We’ve verified that {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is leaving at <MASKED_FLIGHT_TIME> without any delays.",
-    "All systems are go! {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is set to leave on time at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on time for departure at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is leaving at <MASKED_FLIGHT_TIME> on time, as expected."
-    ],
+    "{flight} <MASKED_FLIGHT_NUM> is on time and set to depart at <MASKED_FLIGHT_TIME>."
+    "The current status of {flight} <MASKED_FLIGHT_NUM> is on time. It will depart as planned at <MASKED_FLIGHT_TIME>."
+    "Good news! {flight} <MASKED_FLIGHT_NUM> is on schedule leaving at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is scheduled to depart on time at <MASKED_FLIGHT_TIME>."
+    "Everything looks good for {flight} <MASKED_FLIGHT_NUM>. It’s leaving on time at <MASKED_FLIGHT_TIME>."
+    "The status for {flight} <MASKED_FLIGHT_NUM> is on time. Departure is at <MASKED_FLIGHT_TIME>."
+    "Rest assured {flight} <MASKED_FLIGHT_NUM> is running on time and will depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is on track to depart as scheduled at <MASKED_FLIGHT_TIME>."
+    "No delays for {flight} <MASKED_FLIGHT_NUM>. Departure remains at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> as scheduled."
+    "{flight} <MASKED_FLIGHT_NUM> is on time with a departure time of <MASKED_FLIGHT_TIME>."
+    "Enjoy your journey! {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is on time and set to leave at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has no delays and is leaving on time at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is on time and ready for an on-schedule departure at <MASKED_FLIGHT_TIME>."
+    "The schedule for {flight} <MASKED_FLIGHT_NUM> remains unchanged. It’s leaving at <MASKED_FLIGHT_TIME>."
+    "You can count on {flight} <MASKED_FLIGHT_NUM> departing at <MASKED_FLIGHT_TIME> as planned."
+    "No updates are needed; {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>."
+    "Relax {flight} <MASKED_FLIGHT_NUM> is on time and set for <MASKED_FLIGHT_TIME>."
+    "Everything is in order for {flight} <MASKED_FLIGHT_NUM>. It departs at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is on time and will depart promptly at <MASKED_FLIGHT_TIME>."
+    "No worries! {flight} <MASKED_FLIGHT_NUM> is running on time and departing at <MASKED_FLIGHT_TIME>."
+    "The planned departure time for {flight} <MASKED_FLIGHT_NUM> is still <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is all set to leave at <MASKED_FLIGHT_TIME> with no delays."
+    "You’re good to go! {flight} <MASKED_FLIGHT_NUM> is leaving at <MASKED_FLIGHT_TIME>."
+    "The status for {flight} <MASKED_FLIGHT_NUM> is unchanged. Departure at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is on schedule and leaving on time at <MASKED_FLIGHT_TIME>."
+    "Timely as planned {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>."
+    "The departure for {flight} <MASKED_FLIGHT_NUM> is confirmed on time for <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is on time and leaves at <MASKED_FLIGHT_TIME>."
+    "All systems go! {flight} <MASKED_FLIGHT_NUM> is on time for departure at <MASKED_FLIGHT_TIME>."
+    "No delays have been reported. {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is departing on time as scheduled for <MASKED_FLIGHT_TIME>."
+    "Smooth travels! {flight} <MASKED_FLIGHT_NUM> is on time for a <MASKED_FLIGHT_TIME> departure."
+    "Good news! {flight} <MASKED_FLIGHT_NUM> has no changes to its schedule leaving at <MASKED_FLIGHT_TIME>."
+    "The departure of {flight} <MASKED_FLIGHT_NUM> remains on time for <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is on time and ready to depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is on schedule and set to leave promptly at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is sticking to the schedule and departs at <MASKED_FLIGHT_TIME>."
+    "Exciting news! {flight} <MASKED_FLIGHT_NUM> is on time and departing at <MASKED_FLIGHT_TIME>."
+    "Travel plans are intact; {flight} <MASKED_FLIGHT_NUM> leaves at <MASKED_FLIGHT_TIME>."
+    "The departure for {flight} <MASKED_FLIGHT_NUM> is on time at <MASKED_FLIGHT_TIME>."
+    "Stay confident! {flight} <MASKED_FLIGHT_NUM> is set to depart on time at <MASKED_FLIGHT_TIME>."
+    "No worries your flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME>."
+    "Nothing has changed; {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is running on time and leaves at <MASKED_FLIGHT_TIME>."
+    "All checked out! {flight} <MASKED_FLIGHT_NUM> is set for an on-time departure at <MASKED_FLIGHT_TIME>."
+    "Stay assured {flight} <MASKED_FLIGHT_NUM> is on track for <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is good to go leaving at <MASKED_FLIGHT_TIME>."
+    "No need to worry; {flight} <MASKED_FLIGHT_NUM> leaves at <MASKED_FLIGHT_TIME>."
+    "Timely as always {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>."
+    "On-schedule news! {flight} <MASKED_FLIGHT_NUM> is on time and leaves at <MASKED_FLIGHT_TIME>."
+    "Flying on time! {flight} <MASKED_FLIGHT_NUM> is scheduled for <MASKED_FLIGHT_TIME>."
+    "Up-to-date: {flight} <MASKED_FLIGHT_NUM> departs on time at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is timely for its departure at <MASKED_FLIGHT_TIME>."
+    "Solid confirmation: {flight} <MASKED_FLIGHT_NUM> leaves on time for <MASKED_FLIGHT_TIME>."
+    "The schedule for {flight} <MASKED_FLIGHT_NUM> remains unchanged at <MASKED_FLIGHT_TIME>."
+    "Yes {flight} <MASKED_FLIGHT_NUM> is leaving as planned at <MASKED_FLIGHT_TIME>."
+    "Still scheduled {flight} <MASKED_FLIGHT_NUM> is on time for <MASKED_FLIGHT_TIME>."
+    "The flight plan is intact. {flight} <MASKED_FLIGHT_NUM> leaves at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart on time at <MASKED_FLIGHT_TIME>."
+    "No changes for {flight} <MASKED_FLIGHT_NUM>. It’s leaving as scheduled at <MASKED_FLIGHT_TIME>."
+    "The status is unchanged for {flight} <MASKED_FLIGHT_NUM>. Departure is on time at <MASKED_FLIGHT_TIME>."
+    "All clear! {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is ready to depart on time at <MASKED_FLIGHT_TIME>."
+    "Rest assured {flight} <MASKED_FLIGHT_NUM> is still on time and departing at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is on time leaving at <MASKED_FLIGHT_TIME> as planned."
+    "Great news! {flight} <MASKED_FLIGHT_NUM> has no delays and departs at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> will leave as expected at <MASKED_FLIGHT_TIME> on time."
+    "Timely and ready! {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>."
+    "Your journey is on track! {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>."
+    "Expect {flight} <MASKED_FLIGHT_NUM> to leave at <MASKED_FLIGHT_TIME>. It’s on time."
+    "We’re glad to report {flight} <MASKED_FLIGHT_NUM> is still on time for <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is leaving on schedule at <MASKED_FLIGHT_TIME>."
+    "Everything is on track for {flight} <MASKED_FLIGHT_NUM>. Departure is at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is all set to depart on time at <MASKED_FLIGHT_TIME>."
+    "The schedule remains intact for {flight} <MASKED_FLIGHT_NUM>. It departs at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is still planned for <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is ready to go and on time for <MASKED_FLIGHT_TIME>."
+    "Everything’s smooth for {flight} <MASKED_FLIGHT_NUM>. Departure is on time at <MASKED_FLIGHT_TIME>."
+    "No adjustments for {flight} <MASKED_FLIGHT_NUM>. It’s leaving at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has no changes and departs on time at <MASKED_FLIGHT_TIME>."
+    "Relax {flight} <MASKED_FLIGHT_NUM> departs as planned at <MASKED_FLIGHT_TIME>."
+    "Stay calm! {flight} <MASKED_FLIGHT_NUM> is on schedule for <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> remains on track for <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is moving ahead as scheduled departing at <MASKED_FLIGHT_TIME>."
+    "Smooth travel plans for {flight} <MASKED_FLIGHT_NUM>. It’s on time for <MASKED_FLIGHT_TIME>."
+    "We’re happy to confirm {flight} <MASKED_FLIGHT_NUM> is on time and departs at <MASKED_FLIGHT_TIME>."
+    "No updates! {flight} <MASKED_FLIGHT_NUM> is leaving on time at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is punctual and leaves at <MASKED_FLIGHT_TIME>."
+    "Timely departure is expected for {flight} <MASKED_FLIGHT_NUM> at <MASKED_FLIGHT_TIME>."
+    "We’re on schedule! {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>."
+    "Trust us {flight} <MASKED_FLIGHT_NUM> is leaving on time for <MASKED_FLIGHT_TIME>."
+    "All prepared! {flight} <MASKED_FLIGHT_NUM> is on time for <MASKED_FLIGHT_TIME>."
+    "No disruptions for {flight} <MASKED_FLIGHT_NUM>. Departure is still <MASKED_FLIGHT_TIME>."
+    "Expect {flight} <MASKED_FLIGHT_NUM> to depart at <MASKED_FLIGHT_TIME> on time."
+    "The schedule holds steady for {flight} <MASKED_FLIGHT_NUM>. Departure is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> remains on time for departure at <MASKED_FLIGHT_TIME>."
+    "It’s all good! {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> stays on schedule for <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> leaves at <MASKED_FLIGHT_TIME> no changes reported."
+    "Stay assured {flight} <MASKED_FLIGHT_NUM> is leaving on time at <MASKED_FLIGHT_TIME>."
+    "All systems are ready for {flight} <MASKED_FLIGHT_NUM>. It departs at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> continues to stay on schedule for <MASKED_FLIGHT_TIME>."
+    "Relax and enjoy! {flight} <MASKED_FLIGHT_NUM> leaves on time at <MASKED_FLIGHT_TIME>."
+    "Everything is timely for {flight} <MASKED_FLIGHT_NUM> departing at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is sticking to its departure at <MASKED_FLIGHT_TIME>."
+    "Have peace of mind; {flight} <MASKED_FLIGHT_NUM> is leaving at <MASKED_FLIGHT_TIME>."
+    "Travel on time with {flight} <MASKED_FLIGHT_NUM> departing as scheduled at <MASKED_FLIGHT_TIME>."
+    "Still on track {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>."
+    "We’re happy to report {flight} <MASKED_FLIGHT_NUM> has no delays and departs at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> continues to stay on time and departs at <MASKED_FLIGHT_TIME>."
+    "The departure remains the same for {flight} <MASKED_FLIGHT_NUM>. It’s leaving at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is leaving as planned on time at <MASKED_FLIGHT_TIME>."
+    "Stay on time! {flight} <MASKED_FLIGHT_NUM> departs promptly at <MASKED_FLIGHT_TIME>."
+    "Timely travels for {flight} <MASKED_FLIGHT_NUM>. It leaves on schedule at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is smooth sailing leaving on time for <MASKED_FLIGHT_TIME>."
+    "The planned departure time for {flight} <MASKED_FLIGHT_NUM> is still <MASKED_FLIGHT_TIME>."
+    "On-time travels await you with {flight} <MASKED_FLIGHT_NUM> departing at <MASKED_FLIGHT_TIME>."
+    "Feel at ease; {flight} <MASKED_FLIGHT_NUM> is on schedule for <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> will leave as expected at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is on time and set to depart at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is running as scheduled departing at <MASKED_FLIGHT_TIME>."
+    "Good news! {flight} <MASKED_FLIGHT_NUM> is on time. The departure is at <MASKED_FLIGHT_TIME>."
+    "Everything is on track! {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>."
+    "No delays for {flight} <MASKED_FLIGHT_NUM>. The flight will leave at <MASKED_FLIGHT_TIME>."
+    "The status of {flight} <MASKED_FLIGHT_NUM> is on time departing at <MASKED_FLIGHT_TIME>."
+    "There’s no change in schedule. {flight} <MASKED_FLIGHT_NUM> is on time with departure at <MASKED_FLIGHT_TIME>."
+    "Perfect! {flight} <MASKED_FLIGHT_NUM> is on time and ready to depart at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is on time and scheduled to depart at <MASKED_FLIGHT_TIME>."
+    "Everything is running smoothly. {flight} <MASKED_FLIGHT_NUM> is on time leaving at <MASKED_FLIGHT_TIME>."
+    "Great news! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as planned."
+    "We’re happy to inform you that {flight} <MASKED_FLIGHT_NUM> is on schedule and will depart at <MASKED_FLIGHT_TIME>."
+    "No delays to report for {flight} <MASKED_FLIGHT_NUM>. Departure is still at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is on time and departing at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on time. It's scheduled to leave at <MASKED_FLIGHT_TIME>."
+    "Good news! {flight} <MASKED_FLIGHT_NUM> will take off as planned at <MASKED_FLIGHT_TIME>."
+    "On time! {flight} <MASKED_FLIGHT_NUM> is scheduled to depart at <MASKED_FLIGHT_TIME>."
+    "We’re all set! {flight} <MASKED_FLIGHT_NUM> is on time with a departure at <MASKED_FLIGHT_TIME>."
+    "No delays reported for {flight} <MASKED_FLIGHT_NUM>. The flight will leave at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on time and departure is scheduled for <MASKED_FLIGHT_TIME>."
+    "Everything is proceeding as planned. {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>."
+    "There are no changes for {flight} <MASKED_FLIGHT_NUM> it will depart on time at <MASKED_FLIGHT_TIME>."
+    "We’re excited to confirm that {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>."
+    "No delays expected for {flight} <MASKED_FLIGHT_NUM>. The flight departs at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is on schedule and will depart at <MASKED_FLIGHT_TIME>."
+    "Everything is running according to plan. {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on time and departing promptly at <MASKED_FLIGHT_TIME>."
+    "Good news! {flight} <MASKED_FLIGHT_NUM> is departing as planned at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is scheduled for departure at <MASKED_FLIGHT_TIME> with no delays."
+    "There’s no delay for {flight} <MASKED_FLIGHT_NUM>. The flight will depart at <MASKED_FLIGHT_TIME> as scheduled."
+    "We’re happy to let you know that {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>."
+    "Everything is on track for {flight} <MASKED_FLIGHT_NUM> departing on time at <MASKED_FLIGHT_TIME>."
+    "Good news! {flight} <MASKED_FLIGHT_NUM> is on time and the departure is at <MASKED_FLIGHT_TIME>."
+    "All systems go for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME> as scheduled."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on time. The departure time is still <MASKED_FLIGHT_TIME>."
+    "Everything’s set for {flight} <MASKED_FLIGHT_NUM> to depart on time at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is on schedule with a departure at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>."
+    "There’s no delay for {flight} <MASKED_FLIGHT_NUM>. The flight departs as scheduled at <MASKED_FLIGHT_TIME>."
+    "We’re pleased to inform you that {flight} <MASKED_FLIGHT_NUM> is on time and will leave at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> will depart on time. Expect it to leave at <MASKED_FLIGHT_TIME>."
+    "No delays for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME> as planned."
+    "We’re happy to report that {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is still on time and scheduled to depart at <MASKED_FLIGHT_TIME>."
+    "The status of {flight} <MASKED_FLIGHT_NUM> shows no delay. It will depart at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is scheduled to leave at <MASKED_FLIGHT_TIME> and is on time."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is departing as planned at <MASKED_FLIGHT_TIME>."
+    "Everything’s going as planned. {flight} <MASKED_FLIGHT_NUM> departs at <MASKED_FLIGHT_TIME>."
+    "We’re pleased to confirm that {flight} <MASKED_FLIGHT_NUM> is on time departing at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is on schedule for departure at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is confirmed to be on time with a departure at <MASKED_FLIGHT_TIME>."
+    "Good news! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> with no delays."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is scheduled for departure at <MASKED_FLIGHT_TIME> without any delay."
+    "All is clear! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as scheduled."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is confirmed on time and departs at <MASKED_FLIGHT_TIME>."
+    "We have no delays for {flight} <MASKED_FLIGHT_NUM>. The flight will depart at <MASKED_FLIGHT_TIME>."
+    "We’re happy to inform you that {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>."
+    "The status of {flight} <MASKED_FLIGHT_NUM> is on time departing as planned at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is on time and will depart promptly at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is confirmed for departure at <MASKED_FLIGHT_TIME> without any delays."
+    "We’re pleased to confirm that {flight} <MASKED_FLIGHT_NUM> will depart as scheduled at <MASKED_FLIGHT_TIME>."
+    "There’s no delay for {flight} <MASKED_FLIGHT_NUM>. It will depart on time at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on time. You can expect departure at <MASKED_FLIGHT_TIME>."
+    "All systems are a go for {flight} <MASKED_FLIGHT_NUM>. Departure is on time at <MASKED_FLIGHT_TIME>."
+    "We’re glad to report that {flight} <MASKED_FLIGHT_NUM> is departing as planned at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on time and scheduled to depart at <MASKED_FLIGHT_TIME>."
+    "We’re happy to inform you that {flight} <MASKED_FLIGHT_NUM> is on schedule and will depart at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is scheduled to depart on time at <MASKED_FLIGHT_TIME>."
+    "No changes to report! {flight} <MASKED_FLIGHT_NUM> is leaving at <MASKED_FLIGHT_TIME>."
+    "Everything is running smoothly. {flight} <MASKED_FLIGHT_NUM> departs on time at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>."
+    "We’re excited to confirm that {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>."
+    "Great news! {flight} <MASKED_FLIGHT_NUM> is on time and scheduled to leave at <MASKED_FLIGHT_TIME>."
+    "No delays for {flight} <MASKED_FLIGHT_NUM>. It will depart on time at <MASKED_FLIGHT_TIME>."
+    "Everything’s proceeding on schedule. {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>."
+    "You’re all set! {flight} <MASKED_FLIGHT_NUM> will leave at <MASKED_FLIGHT_TIME> as scheduled."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart at <MASKED_FLIGHT_TIME>."
+    "On time and ready! {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME>."
+    "We’re happy to let you know that {flight} <MASKED_FLIGHT_NUM> is on time for departure at <MASKED_FLIGHT_TIME>."
+    "There are no delays for {flight} <MASKED_FLIGHT_NUM>. It’s scheduled to depart at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is ready to depart on time at <MASKED_FLIGHT_TIME>."
+    "The status of {flight} <MASKED_FLIGHT_NUM> is on time leaving at <MASKED_FLIGHT_TIME>."
+    "Everything is set for {flight} <MASKED_FLIGHT_NUM> to depart at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> will leave exactly at <MASKED_FLIGHT_TIME> as planned."
+    "We’re pleased to inform you that {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> without delays."
+    "The flight {flight} <MASKED_FLIGHT_NUM> will depart promptly at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is all set to depart at <MASKED_FLIGHT_TIME> on time."
+    "Good news! {flight} <MASKED_FLIGHT_NUM> is on time and departing at <MASKED_FLIGHT_TIME>."
+    "Everything’s looking good for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart on time at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is departing on time as scheduled at <MASKED_FLIGHT_TIME>."
+    "We’ve confirmed that {flight} <MASKED_FLIGHT_NUM> will leave at <MASKED_FLIGHT_TIME> without any delays."
+    "There are no issues with {flight} <MASKED_FLIGHT_NUM>. It will depart on time at <MASKED_FLIGHT_TIME>."
+    "We’re happy to confirm that {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> on time."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> as expected."
+    "Everything is on track for {flight} <MASKED_FLIGHT_NUM> departing at <MASKED_FLIGHT_TIME> on time."
+    "The status of {flight} <MASKED_FLIGHT_NUM> is on time departing at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on schedule departing at <MASKED_FLIGHT_TIME>."
+    "No delay for {flight} <MASKED_FLIGHT_NUM>. It’s leaving at <MASKED_FLIGHT_TIME> as planned."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is set to depart at <MASKED_FLIGHT_TIME> without delay."
+    "Everything is set for a smooth departure. {flight} <MASKED_FLIGHT_NUM> will leave at <MASKED_FLIGHT_TIME>."
+    "On time! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as scheduled."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is all set to depart at <MASKED_FLIGHT_TIME> on time."
+    "We’re glad to confirm that {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> without any issues."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart at <MASKED_FLIGHT_TIME> on time."
+    "There are no delays for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME>."
+    "Great news! {flight} <MASKED_FLIGHT_NUM> is on schedule and will leave at <MASKED_FLIGHT_TIME>."
+    "We’re happy to report that {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>."
+    "No delays for {flight} <MASKED_FLIGHT_NUM>. The flight is on time and leaving at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> without any delays."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is leaving on time at <MASKED_FLIGHT_TIME>."
+    "Everything is set for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME> on time."
+    "We’ve confirmed that {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as planned."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart at <MASKED_FLIGHT_TIME> without any delays."
+    "The flight {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> without any issues."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart at <MASKED_FLIGHT_TIME> on time."
+    "We’re pleased to let you know that {flight} <MASKED_FLIGHT_NUM> is on time and leaving at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> will depart promptly at <MASKED_FLIGHT_TIME>."
+    "We’re happy to report that {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>."
+    "Everything is proceeding on schedule for {flight} <MASKED_FLIGHT_NUM>. It departs at <MASKED_FLIGHT_TIME>." 
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is on time and will depart at <MASKED_FLIGHT_TIME>."
+    "Good news! {flight} <MASKED_FLIGHT_NUM> is set to depart on time at <MASKED_FLIGHT_TIME>."
+    "The status of {flight} <MASKED_FLIGHT_NUM> is on time. It will depart at <MASKED_FLIGHT_TIME>."
+    "Everything looks great! {flight} <MASKED_FLIGHT_NUM> is scheduled to leave at <MASKED_FLIGHT_TIME>."
+    "No delays for {flight} <MASKED_FLIGHT_NUM>. It's on time and leaving at <MASKED_FLIGHT_TIME>."
+    "We’ve confirmed that {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>."
+    "Everything is on schedule for {flight} <MASKED_FLIGHT_NUM>. Departure is at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is leaving as planned at <MASKED_FLIGHT_TIME>."
+    "We can confirm that {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>."
+    "No changes to report! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>."
+    "Everything’s running smoothly for {flight} <MASKED_FLIGHT_NUM>. It’s on time for departure at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> as scheduled."
+    "We’re happy to confirm that {flight} <MASKED_FLIGHT_NUM> is on time and departing at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> will depart promptly at <MASKED_FLIGHT_TIME>."
+    "There are no issues. {flight} <MASKED_FLIGHT_NUM> is scheduled to leave at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is ready to depart on time at <MASKED_FLIGHT_TIME>."
+    "You’re all set! {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as planned."
+    "The departure time for {flight} <MASKED_FLIGHT_NUM> is confirmed at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME> as scheduled."
+    "Everything is on track for {flight} <MASKED_FLIGHT_NUM>. It departs on time at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> without delay."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is departing as expected at <MASKED_FLIGHT_TIME>."
+    "Great news! {flight} <MASKED_FLIGHT_NUM> is scheduled to leave at <MASKED_FLIGHT_TIME> on time."
+    "The flight {flight} <MASKED_FLIGHT_NUM> will depart promptly at <MASKED_FLIGHT_TIME> as scheduled."
+    "The departure for {flight} <MASKED_FLIGHT_NUM> is on time and it will leave at <MASKED_FLIGHT_TIME>."
+    "Everything’s set for your flight {flight} <MASKED_FLIGHT_NUM>. It will leave at <MASKED_FLIGHT_TIME> on time."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is confirmed to depart at <MASKED_FLIGHT_TIME>."
+    "We’re pleased to let you know that {flight} <MASKED_FLIGHT_NUM> is on time and leaving at <MASKED_FLIGHT_TIME>."
+    "There are no delays. {flight} <MASKED_FLIGHT_NUM> is on time for departure at <MASKED_FLIGHT_TIME>."
+    "We’re happy to confirm that {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is departing at <MASKED_FLIGHT_TIME> with no delays."
+    "The flight {flight} <MASKED_FLIGHT_NUM> will depart as planned at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is all set to leave on time at <MASKED_FLIGHT_TIME>."
+    "We’ve confirmed that {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>."
+    "On schedule! {flight} <MASKED_FLIGHT_NUM> is set to depart at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is leaving on time at <MASKED_FLIGHT_TIME> as scheduled."
+    "Everything looks great for {flight} <MASKED_FLIGHT_NUM>. It will depart at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on track and departing at <MASKED_FLIGHT_TIME>."
+    "We’re happy to report that {flight} <MASKED_FLIGHT_NUM> will leave on time at <MASKED_FLIGHT_TIME>."
+    "Good news! {flight} <MASKED_FLIGHT_NUM> is on time for departure at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> as scheduled."
+    "Everything’s in order for {flight} <MASKED_FLIGHT_NUM>. It’s leaving at <MASKED_FLIGHT_TIME> on time."
+    "There are no delays for {flight} <MASKED_FLIGHT_NUM>. It’s departing on time at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> will depart as planned at <MASKED_FLIGHT_TIME>."
+    "We’ve verified that {flight} <MASKED_FLIGHT_NUM> is departing on time at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is leaving at <MASKED_FLIGHT_TIME> without any delays."
+    "All systems are go! {flight} <MASKED_FLIGHT_NUM> will depart on time at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is set to leave on time at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on time for departure at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is departing as scheduled at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is leaving at <MASKED_FLIGHT_TIME> on time as expected."
+    ]
     "DELAYED" : [
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is delayed. Updated departure time: <MASKED_FLIGHT_TIME>.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been delayed to <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is running late. The expected departure time is now <MASKED_FLIGHT_TIME>.",
-    "The current status for {flight} <MASKED_FLIGHT_NUM> is delayed. It will now depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. Please note the new departure time: <MASKED_FLIGHT_TIME>.",
-    "Due to unforeseen circumstances, {flight} <MASKED_FLIGHT_NUM> is delayed. It’s now scheduled for <MASKED_FLIGHT_TIME>.",
-    "We apologize for the delay. {flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> has been delayed and is expected to depart at <MASKED_FLIGHT_TIME>.",
-    "There’s been a delay for {flight} <MASKED_FLIGHT_NUM>. The departure time is rescheduled to <MASKED_FLIGHT_TIME>.",
-    "Please be informed that {flight} <MASKED_FLIGHT_NUM> is delayed. It’s now leaving at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> won’t depart on time. The new departure is at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has a delay. The departure is now planned for <MASKED_FLIGHT_TIME>.",
-    "We’re sorry for the inconvenience. {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "There’s a delay for {flight} <MASKED_FLIGHT_NUM>. Updated departure time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. Please prepare for departure at <MASKED_FLIGHT_TIME>.",
-    "Our apologies, {flight} <MASKED_FLIGHT_NUM> will not leave on time. New departure time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed and is now set to leave at <MASKED_FLIGHT_TIME>.",
-    "Expect a delay for {flight} <MASKED_FLIGHT_NUM>. The adjusted departure is at <MASKED_FLIGHT_TIME>.",
-    "Bad news: {flight} <MASKED_FLIGHT_NUM> is delayed. It’s rescheduled for <MASKED_FLIGHT_TIME>.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> is running behind schedule. Departure is at <MASKED_FLIGHT_TIME>.",
-    "A delay is affecting {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> will not depart as planned. It’s rescheduled to <MASKED_FLIGHT_TIME>.",
-    "The departure for {flight} <MASKED_FLIGHT_NUM> is delayed. It’s now leaving at <MASKED_FLIGHT_TIME>.",
-    "Please note that {flight} <MASKED_FLIGHT_NUM> is delayed. Adjusted time: <MASKED_FLIGHT_TIME>.",
-    "A delay has been reported for {flight} <MASKED_FLIGHT_NUM>. New departure: <MASKED_FLIGHT_TIME>.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> is delayed. It will leave at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is behind schedule. Updated departure time: <MASKED_FLIGHT_TIME>.",
-    "Your patience is appreciated. {flight} <MASKED_FLIGHT_NUM> is delayed until <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed and will now depart at <MASKED_FLIGHT_TIME>.",
-    "There is a delay with {flight} <MASKED_FLIGHT_NUM>. The revised time is <MASKED_FLIGHT_TIME>.",
-    "We regret the inconvenience. {flight} <MASKED_FLIGHT_NUM> is delayed to <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has encountered a delay. Please expect departure at <MASKED_FLIGHT_TIME>.",
-    "A delay has occurred for {flight} <MASKED_FLIGHT_NUM>. New schedule: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is now set to depart at <MASKED_FLIGHT_TIME> due to a delay.",
-    "Travel plans for {flight} <MASKED_FLIGHT_NUM> have changed. Departure is delayed to <MASKED_FLIGHT_TIME>.",
-    "The latest update for {flight} <MASKED_FLIGHT_NUM> shows a delay. New time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> won’t leave as planned. The revised departure is <MASKED_FLIGHT_TIME>.",
-    "Sorry for the delay! {flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has experienced a delay. New departure time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is facing a delay. Expect it to leave at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is running behind schedule. New time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME> due to a delay.",
-    "Please accept our apologies. {flight} <MASKED_FLIGHT_NUM> is delayed to <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been pushed back. It now departs at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. Departure is rescheduled to <MASKED_FLIGHT_TIME>.",
-    "A delayed schedule is in effect for {flight} <MASKED_FLIGHT_NUM>. The new time is <MASKED_FLIGHT_TIME>.",
-    "Important update: {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> has a delay. Adjusted departure: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. New departure time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has a delay. It’s now expected to leave at <MASKED_FLIGHT_TIME>.",
-    "The latest update: {flight} <MASKED_FLIGHT_NUM> is delayed. New departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. Please expect the flight to leave at <MASKED_FLIGHT_TIME>.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> has been delayed. It will depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is running late. The revised departure time is <MASKED_FLIGHT_TIME>.",
-    "Due to unforeseen delays, {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "The schedule for {flight} <MASKED_FLIGHT_NUM> has changed. Departure is delayed to <MASKED_FLIGHT_TIME>.",
-    "Apologies for the inconvenience. {flight} <MASKED_FLIGHT_NUM> is delayed until <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been rescheduled. The new time is <MASKED_FLIGHT_TIME>.",
-    "There is an update for {flight} <MASKED_FLIGHT_NUM>: departure delayed to <MASKED_FLIGHT_TIME>.",
-    "We regret to inform you of a delay. {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is experiencing a delay. New departure time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. Please be advised that the new departure time is <MASKED_FLIGHT_TIME>.",
-    "A delay has affected {flight} <MASKED_FLIGHT_NUM>. Departure is rescheduled to <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, there’s a delay for {flight} <MASKED_FLIGHT_NUM>. Departure time is now <MASKED_FLIGHT_TIME>.",
-    "Your patience is appreciated as {flight} <MASKED_FLIGHT_NUM> is delayed to <MASKED_FLIGHT_TIME>.",
-    "We’re sorry for the delay to {flight} <MASKED_FLIGHT_NUM>. Please expect departure at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now delayed. Updated schedule: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed due to operational issues. New departure: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. Updated departure time: <MASKED_FLIGHT_TIME>.",
-    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME>.",
-    "A delay has occurred for {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is delayed. Expected time of departure: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. Departure will now take place at <MASKED_FLIGHT_TIME>.",
-    "Due to unexpected reasons, {flight} <MASKED_FLIGHT_NUM> has been delayed to <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is running late. It’s now scheduled for <MASKED_FLIGHT_TIME>.",
-    "There’s been a delay for {flight} <MASKED_FLIGHT_NUM>. The departure time is <MASKED_FLIGHT_TIME>.",
-    "We regret to announce that {flight} <MASKED_FLIGHT_NUM> has been delayed to <MASKED_FLIGHT_TIME>.",
-    "A revised schedule for {flight} <MASKED_FLIGHT_NUM> shows departure at <MASKED_FLIGHT_TIME>.",
-    "The current status of {flight} <MASKED_FLIGHT_NUM> is delayed. The flight will leave at <MASKED_FLIGHT_TIME>.",
-    "Please note: {flight} <MASKED_FLIGHT_NUM> has been delayed. Departure is at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is behind schedule. Expect departure at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is experiencing a delay. Adjusted time: <MASKED_FLIGHT_TIME>.",
-    "We apologize for the delay. {flight} <MASKED_FLIGHT_NUM> is now scheduled for <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME> due to a delay.",
-    "{flight} <MASKED_FLIGHT_NUM> has a revised departure time: <MASKED_FLIGHT_TIME>.",
-    "The adjusted departure time for {flight} <MASKED_FLIGHT_NUM> is <MASKED_FLIGHT_TIME>.",
-    "A delay has been reported for {flight} <MASKED_FLIGHT_NUM>. The new time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. Please plan for departure at <MASKED_FLIGHT_TIME>.",
-    "Travel update: {flight} <MASKED_FLIGHT_NUM> is delayed. Scheduled time is now <MASKED_FLIGHT_TIME>.",
-    "Due to scheduling issues, {flight} <MASKED_FLIGHT_NUM> has been delayed to <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is affected by a delay. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "A delay impacts {flight} <MASKED_FLIGHT_NUM>. Expected departure is at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is now delayed. Departure will occur at <MASKED_FLIGHT_TIME>.",
-    "Due to unexpected reasons, {flight} <MASKED_FLIGHT_NUM> is delayed. Please expect it at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. New time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is running late. Departure is set for <MASKED_FLIGHT_TIME>.",
-    "We apologize for the delay. The adjusted departure time for {flight} <MASKED_FLIGHT_NUM> is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> will depart later than planned. The new time is <MASKED_FLIGHT_TIME>.",
-    "Delayed: {flight} <MASKED_FLIGHT_NUM>. Updated time of departure: <MASKED_FLIGHT_TIME>.",
-    "The updated schedule shows {flight} <MASKED_FLIGHT_NUM> departing at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. Adjusted time for departure is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME> due to delays.",
-    "Unfortunately, there’s a delay for {flight} <MASKED_FLIGHT_NUM>. Please expect it to depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. Apologies for the inconvenience. New departure time: <MASKED_FLIGHT_TIME>.",
-    "We’re sorry to inform you that {flight} <MASKED_FLIGHT_NUM> is delayed. The updated schedule is <MASKED_FLIGHT_TIME>.",
-    "The latest update shows a delay for {flight} <MASKED_FLIGHT_NUM>. Departure is now set for <MASKED_FLIGHT_TIME>.",
-    "Due to operational reasons, {flight} <MASKED_FLIGHT_NUM> is delayed. New departure is scheduled for <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been rescheduled due to a delay. Please check departure time: <MASKED_FLIGHT_TIME>.",
-    "We regret the delay for {flight} <MASKED_FLIGHT_NUM>. Departure is now expected at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. We appreciate your patience as we now plan for departure at <MASKED_FLIGHT_TIME>.",
-    "Travel update: A delay affects {flight} <MASKED_FLIGHT_NUM>. Revised time: <MASKED_FLIGHT_TIME>.",
-    "Thank you for your understanding. {flight} <MASKED_FLIGHT_NUM> is delayed to <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> will be delayed. The departure time is rescheduled for <MASKED_FLIGHT_TIME>.",
-    "The departure time for {flight} <MASKED_FLIGHT_NUM> has been changed. Expect it to leave at <MASKED_FLIGHT_TIME>.",
-    "There’s been a change in schedule. {flight} <MASKED_FLIGHT_NUM> is delayed until <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The updated time is <MASKED_FLIGHT_TIME>. Thank you for your patience.",
-    "The current status of {flight} <MASKED_FLIGHT_NUM> is delayed. Departure is expected at <MASKED_FLIGHT_TIME>.",
-    "A delay has been reported for {flight} <MASKED_FLIGHT_NUM>. It is now scheduled to leave at <MASKED_FLIGHT_TIME>.",
-    "The revised departure schedule for {flight} <MASKED_FLIGHT_NUM> is <MASKED_FLIGHT_TIME> due to a delay.",
-    "{flight} <MASKED_FLIGHT_NUM> has been impacted by a delay. Departure time is now <MASKED_FLIGHT_TIME>.",
-    "Due to unexpected circumstances, {flight} <MASKED_FLIGHT_NUM> will depart later than expected at <MASKED_FLIGHT_TIME>.",
-    "Our apologies for the inconvenience. {flight} <MASKED_FLIGHT_NUM> has been delayed to <MASKED_FLIGHT_TIME>.",
-    "We understand your concern. {flight} <MASKED_FLIGHT_NUM> is delayed. It will now depart at <MASKED_FLIGHT_TIME>.",
-    "The departure for {flight} <MASKED_FLIGHT_NUM> has been delayed. Updated time is <MASKED_FLIGHT_TIME>.",
-    "A flight delay for {flight} <MASKED_FLIGHT_NUM> has been reported. Please plan for <MASKED_FLIGHT_TIME> departure.",
-    "{flight} <MASKED_FLIGHT_NUM> will now leave later than scheduled. Expected time: <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, a delay impacts {flight} <MASKED_FLIGHT_NUM>. The new time is <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is delayed. Please note the revised time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been rescheduled to depart later than expected. New time: <MASKED_FLIGHT_TIME>.",
-    "The schedule for {flight} <MASKED_FLIGHT_NUM> has been modified due to a delay. Updated time: <MASKED_FLIGHT_TIME>.",
-    "A delay affects {flight} <MASKED_FLIGHT_NUM>. Please expect departure at <MASKED_FLIGHT_TIME>.",
-    "The updated departure time for {flight} <MASKED_FLIGHT_NUM> is <MASKED_FLIGHT_TIME> due to a delay.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is delayed. We anticipate departure at <MASKED_FLIGHT_TIME>.",
-    "Please note that {flight} <MASKED_FLIGHT_NUM> is running late. Departure is now scheduled for <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed and will depart later than planned at <MASKED_FLIGHT_TIME>.",
-    "We’re sorry for the delay. {flight} <MASKED_FLIGHT_NUM> is now set to depart at <MASKED_FLIGHT_TIME>.",
-    "The current schedule shows {flight} <MASKED_FLIGHT_NUM> departing later than expected at <MASKED_FLIGHT_TIME>.",
-    "A delay has affected {flight} <MASKED_FLIGHT_NUM>. Departure is rescheduled for <MASKED_FLIGHT_TIME>.",
-    "Apologies for the delay to {flight} <MASKED_FLIGHT_NUM>. Please expect departure at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is running late. The revised departure time is <MASKED_FLIGHT_TIME>.",
-    "Due to operational issues, {flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME>.",
-    "Thank you for waiting. {flight} <MASKED_FLIGHT_NUM> is delayed. Updated schedule: <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> is experiencing delays. Departure will occur at <MASKED_FLIGHT_TIME>.",
-    "We apologize for the delayed departure of {flight} <MASKED_FLIGHT_NUM>. New time: <MASKED_FLIGHT_TIME>.",
-    "The adjusted schedule for {flight} <MASKED_FLIGHT_NUM> shows departure at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. It will now depart at <MASKED_FLIGHT_TIME>.",
-    "An operational delay has affected {flight} <MASKED_FLIGHT_NUM>. Expected departure: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed due to unforeseen issues. New departure: <MASKED_FLIGHT_TIME>.",
-    "Our team is working to resolve the delay. {flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is delayed. Scheduled departure is now <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been postponed. Departure is now set for <MASKED_FLIGHT_TIME>.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure is <MASKED_FLIGHT_TIME>.",
-    "There is a delay for {flight} <MASKED_FLIGHT_NUM>. It is now departing at <MASKED_FLIGHT_TIME>.",
-    "Due to unforeseen circumstances, {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "The updated schedule shows that {flight} <MASKED_FLIGHT_NUM> will be departing at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The new estimated departure time is <MASKED_FLIGHT_TIME>.",
-    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The departure time has been rescheduled to <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is running late. Please expect departure at <MASKED_FLIGHT_TIME>.",
-    "Due to weather conditions, {flight} <MASKED_FLIGHT_NUM> has been delayed. It will now depart at <MASKED_FLIGHT_TIME>.",
-    "The status of {flight} <MASKED_FLIGHT_NUM> shows a delay. New departure time: <MASKED_FLIGHT_TIME>.",
-    "We apologize for the delay. {flight} <MASKED_FLIGHT_NUM> is now departing at <MASKED_FLIGHT_TIME>.",
-    "We regret that {flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure time is <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, there has been a delay for {flight} <MASKED_FLIGHT_NUM>. Departure will be at <MASKED_FLIGHT_TIME>.",
-    "The scheduled departure for {flight} <MASKED_FLIGHT_NUM> has been delayed. The new time is <MASKED_FLIGHT_TIME>.",
-    "There's a delay with {flight} <MASKED_FLIGHT_NUM>. It will now depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has experienced a delay. New departure time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure time is <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been delayed. It is now set to depart at <MASKED_FLIGHT_TIME>.",
-    "We’re sorry to report a delay for {flight} <MASKED_FLIGHT_NUM>. The departure time has been changed to <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The revised time of departure is <MASKED_FLIGHT_TIME>.",
-    "The delay for {flight} <MASKED_FLIGHT_NUM> has been confirmed. Departure will be at <MASKED_FLIGHT_TIME>.",
-    "We apologize for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> is delayed. New departure: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. We expect a departure at <MASKED_FLIGHT_TIME>.",
-    "There has been a delay with {flight} <MASKED_FLIGHT_NUM>. The new expected departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed due to unforeseen reasons. Departure now set for <MASKED_FLIGHT_TIME>.",
-    "We’re sorry for the delay with {flight} <MASKED_FLIGHT_NUM>. The updated departure time is <MASKED_FLIGHT_TIME>.",
-    "There’s a delay for {flight} <MASKED_FLIGHT_NUM> and it will now leave at <MASKED_FLIGHT_TIME>.",
-    "Apologies for the delay, {flight} <MASKED_FLIGHT_NUM>. Please expect the new departure time at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed and now departing at <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> will be delayed. Expect a new departure at <MASKED_FLIGHT_TIME>.",
-    "Due to operational delays, {flight} <MASKED_FLIGHT_NUM> is departing later at <MASKED_FLIGHT_TIME>.",
-    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. Departure will now take place at <MASKED_FLIGHT_TIME>.",
-    "Please note that {flight} <MASKED_FLIGHT_NUM> is delayed. It is now scheduled to depart at <MASKED_FLIGHT_TIME>.",
-    "A delay has been reported for {flight} <MASKED_FLIGHT_NUM>. The updated time of departure is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is running late. New expected departure time: <MASKED_FLIGHT_TIME>.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is delayed. It will now depart at <MASKED_FLIGHT_TIME>.",
-    "A delay affects {flight} <MASKED_FLIGHT_NUM>. New departure time: <MASKED_FLIGHT_TIME>.",
-    "There’s been a delay for {flight} <MASKED_FLIGHT_NUM>. Expect it to depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The departure time is now <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been delayed. The rescheduled departure time is <MASKED_FLIGHT_TIME>.",
-    "Due to technical issues, {flight} <MASKED_FLIGHT_NUM> is delayed. New time: <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The revised departure is now <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure time is now <MASKED_FLIGHT_TIME>.",
-    "We apologize for the delay of {flight} <MASKED_FLIGHT_NUM>. The new time of departure is <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is running late. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "There’s a delay for {flight} <MASKED_FLIGHT_NUM> and it will now depart at <MASKED_FLIGHT_TIME>.",
-    "Please note that {flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure is at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed due to weather conditions. New departure time is <MASKED_FLIGHT_TIME>.",
-    "We apologize for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> is delayed. New departure time: <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> will be delayed. The updated departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The new departure is scheduled for <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed and now departing at <MASKED_FLIGHT_TIME>.",
-    "A delay has impacted {flight} <MASKED_FLIGHT_NUM>. The updated departure is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> due to a delay.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been delayed. The new time of departure is <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is delayed. The new scheduled time is <MASKED_FLIGHT_TIME>.",
-    "The delay for {flight} <MASKED_FLIGHT_NUM> has been confirmed. Please expect departure at <MASKED_FLIGHT_TIME>.",
-    "The status of {flight} <MASKED_FLIGHT_NUM> is delayed. It will now depart at <MASKED_FLIGHT_TIME>.",
-    "We’re sorry, but {flight} <MASKED_FLIGHT_NUM> is delayed. The revised departure time is <MASKED_FLIGHT_TIME>.",
-    "Due to unforeseen circumstances, {flight} <MASKED_FLIGHT_NUM> is delayed. It will now leave at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. The new time is <MASKED_FLIGHT_TIME>.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. Please check the updated departure time: <MASKED_FLIGHT_TIME>.",
-    "The departure of {flight} <MASKED_FLIGHT_NUM> is delayed. The new time of departure is <MASKED_FLIGHT_TIME>.",
-    "We regret the delay of {flight} <MASKED_FLIGHT_NUM>. It is now scheduled to depart at <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is delayed. The updated schedule shows departure at <MASKED_FLIGHT_TIME>.",
-    "There is a delay with {flight} <MASKED_FLIGHT_NUM>. The rescheduled departure is at <MASKED_FLIGHT_TIME>.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been delayed. New departure time: <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, there is a delay for {flight} <MASKED_FLIGHT_NUM>. The updated time of departure is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "Due to operational delays, {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "We're sorry for the delay, {flight} <MASKED_FLIGHT_NUM>. The revised time of departure is <MASKED_FLIGHT_TIME>.",
-    "There’s a delay with {flight} <MASKED_FLIGHT_NUM>. The updated departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has experienced a delay. New time of departure: <MASKED_FLIGHT_TIME>.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure is at <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME> due to a delay.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. New departure time: <MASKED_FLIGHT_TIME>.",
-    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> is delayed. The new time is <MASKED_FLIGHT_TIME>.",
-    "There is a delay for {flight} <MASKED_FLIGHT_NUM>. The revised departure time is <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is delayed. Please expect departure at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is delayed. It will depart at <MASKED_FLIGHT_TIME>.",
-    "Due to unforeseen circumstances, {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "The departure time for {flight} <MASKED_FLIGHT_NUM> has been updated. New time: <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is delayed. Please expect to depart at <MASKED_FLIGHT_TIME>.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. The new expected departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The updated time for departure is <MASKED_FLIGHT_TIME>.",
-    "We’re sorry, but {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME> due to a delay.",
-    "There is a delay affecting {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is delayed. It will depart at <MASKED_FLIGHT_TIME>.",
-    "We apologize for the delay. {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, there’s a delay for {flight} <MASKED_FLIGHT_NUM>. Departure is now at <MASKED_FLIGHT_TIME>.",
-    "Due to weather conditions, {flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "Your flight, {flight} <MASKED_FLIGHT_NUM>, is delayed. Please expect the new departure time at <MASKED_FLIGHT_TIME>.",
-    "There is a delay for {flight} <MASKED_FLIGHT_NUM>. The revised departure is at <MASKED_FLIGHT_TIME>.",
-    "We regret the delay with {flight} <MASKED_FLIGHT_NUM>. It will now depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. Please check back for the updated departure at <MASKED_FLIGHT_TIME>.",
-    "Due to technical issues, {flight} <MASKED_FLIGHT_NUM> has been delayed. It will now depart at <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has been delayed. It will depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> is delayed. The revised departure time is <MASKED_FLIGHT_TIME>.",
-    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. Please expect the updated departure at <MASKED_FLIGHT_TIME>.",
-    "Your flight {flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "We regret the delay for {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure time is <MASKED_FLIGHT_TIME>.",
-    "Due to operational delays, {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>.",
-    "Apologies for the delay. {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is delayed. It will depart at <MASKED_FLIGHT_TIME>.",
-    "The status of {flight} <MASKED_FLIGHT_NUM> shows a delay. The new time for departure is <MASKED_FLIGHT_TIME>.",
-    "There’s a delay for {flight} <MASKED_FLIGHT_NUM>. The updated time is <MASKED_FLIGHT_TIME>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has been delayed. New departure time: <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> due to a delay.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. Expect departure at <MASKED_FLIGHT_TIME>.",
-    "There’s a delay with {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-    "The departure for {flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed. The revised time is <MASKED_FLIGHT_TIME>.",
-    "We apologize for the delay of {flight} <MASKED_FLIGHT_NUM>. The new expected time is <MASKED_FLIGHT_TIME>.",
-    "Due to a delay, {flight} <MASKED_FLIGHT_NUM> is now departing at <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is delayed. The new scheduled departure time is <MASKED_FLIGHT_TIME>.",
-    "We’re sorry for the delay with {flight} <MASKED_FLIGHT_NUM>. The departure is now at <MASKED_FLIGHT_TIME>.",
-    "There’s a delay for {flight} <MASKED_FLIGHT_NUM>. Please check the updated departure time at <MASKED_FLIGHT_TIME>.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is delayed. New departure time is <MASKED_FLIGHT_TIME>.",
-    "Unfortunately, there’s a delay for {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "There has been a delay with {flight} <MASKED_FLIGHT_NUM>. Expect to depart at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is delayed and now departing at <MASKED_FLIGHT_TIME>.",
-    "The delay for {flight} <MASKED_FLIGHT_NUM> is confirmed. The new departure time is <MASKED_FLIGHT_TIME>.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>.",
-],
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is delayed. Updated departure time: <MASKED_FLIGHT_TIME>."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been delayed to <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is running late. The expected departure time is now <MASKED_FLIGHT_TIME>."
+    "The current status for {flight} <MASKED_FLIGHT_NUM> is delayed. It will now depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. Please note the new departure time: <MASKED_FLIGHT_TIME>."
+    "Due to unforeseen circumstances {flight} <MASKED_FLIGHT_NUM> is delayed. It’s now scheduled for <MASKED_FLIGHT_TIME>."
+    "We apologize for the delay. {flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> has been delayed and is expected to depart at <MASKED_FLIGHT_TIME>."
+    "There’s been a delay for {flight} <MASKED_FLIGHT_NUM>. The departure time is rescheduled to <MASKED_FLIGHT_TIME>."
+    "Please be informed that {flight} <MASKED_FLIGHT_NUM> is delayed. It’s now leaving at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> won’t depart on time. The new departure is at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has a delay. The departure is now planned for <MASKED_FLIGHT_TIME>."
+    "We’re sorry for the inconvenience. {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "There’s a delay for {flight} <MASKED_FLIGHT_NUM>. Updated departure time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. Please prepare for departure at <MASKED_FLIGHT_TIME>."
+    "Our apologies {flight} <MASKED_FLIGHT_NUM> will not leave on time. New departure time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed and is now set to leave at <MASKED_FLIGHT_TIME>."
+    "Expect a delay for {flight} <MASKED_FLIGHT_NUM>. The adjusted departure is at <MASKED_FLIGHT_TIME>."
+    "Bad news: {flight} <MASKED_FLIGHT_NUM> is delayed. It’s rescheduled for <MASKED_FLIGHT_TIME>."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> is running behind schedule. Departure is at <MASKED_FLIGHT_TIME>."
+    "A delay is affecting {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> will not depart as planned. It’s rescheduled to <MASKED_FLIGHT_TIME>."
+    "The departure for {flight} <MASKED_FLIGHT_NUM> is delayed. It’s now leaving at <MASKED_FLIGHT_TIME>."
+    "Please note that {flight} <MASKED_FLIGHT_NUM> is delayed. Adjusted time: <MASKED_FLIGHT_TIME>."
+    "A delay has been reported for {flight} <MASKED_FLIGHT_NUM>. New departure: <MASKED_FLIGHT_TIME>."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> is delayed. It will leave at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is behind schedule. Updated departure time: <MASKED_FLIGHT_TIME>."
+    "Your patience is appreciated. {flight} <MASKED_FLIGHT_NUM> is delayed until <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed and will now depart at <MASKED_FLIGHT_TIME>."
+    "There is a delay with {flight} <MASKED_FLIGHT_NUM>. The revised time is <MASKED_FLIGHT_TIME>."
+    "We regret the inconvenience. {flight} <MASKED_FLIGHT_NUM> is delayed to <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has encountered a delay. Please expect departure at <MASKED_FLIGHT_TIME>."
+    "A delay has occurred for {flight} <MASKED_FLIGHT_NUM>. New schedule: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is now set to depart at <MASKED_FLIGHT_TIME> due to a delay."
+    "Travel plans for {flight} <MASKED_FLIGHT_NUM> have changed. Departure is delayed to <MASKED_FLIGHT_TIME>."
+    "The latest update for {flight} <MASKED_FLIGHT_NUM> shows a delay. New time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> won’t leave as planned. The revised departure is <MASKED_FLIGHT_TIME>."
+    "Sorry for the delay! {flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has experienced a delay. New departure time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is facing a delay. Expect it to leave at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is running behind schedule. New time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME> due to a delay."
+    "Please accept our apologies. {flight} <MASKED_FLIGHT_NUM> is delayed to <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been pushed back. It now departs at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. Departure is rescheduled to <MASKED_FLIGHT_TIME>."
+    "A delayed schedule is in effect for {flight} <MASKED_FLIGHT_NUM>. The new time is <MASKED_FLIGHT_TIME>."
+    "Important update: {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> has a delay. Adjusted departure: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. New departure time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has a delay. It’s now expected to leave at <MASKED_FLIGHT_TIME>."
+    "The latest update: {flight} <MASKED_FLIGHT_NUM> is delayed. New departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. Please expect the flight to leave at <MASKED_FLIGHT_TIME>."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> has been delayed. It will depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is running late. The revised departure time is <MASKED_FLIGHT_TIME>."
+    "Due to unforeseen delays {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "The schedule for {flight} <MASKED_FLIGHT_NUM> has changed. Departure is delayed to <MASKED_FLIGHT_TIME>."
+    "Apologies for the inconvenience. {flight} <MASKED_FLIGHT_NUM> is delayed until <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been rescheduled. The new time is <MASKED_FLIGHT_TIME>."
+    "There is an update for {flight} <MASKED_FLIGHT_NUM>: departure delayed to <MASKED_FLIGHT_TIME>."
+    "We regret to inform you of a delay. {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is experiencing a delay. New departure time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. Please be advised that the new departure time is <MASKED_FLIGHT_TIME>."
+    "A delay has affected {flight} <MASKED_FLIGHT_NUM>. Departure is rescheduled to <MASKED_FLIGHT_TIME>."
+    "Unfortunately there’s a delay for {flight} <MASKED_FLIGHT_NUM>. Departure time is now <MASKED_FLIGHT_TIME>."
+    "Your patience is appreciated as {flight} <MASKED_FLIGHT_NUM> is delayed to <MASKED_FLIGHT_TIME>."
+    "We’re sorry for the delay to {flight} <MASKED_FLIGHT_NUM>. Please expect departure at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now delayed. Updated schedule: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed due to operational issues. New departure: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. Updated departure time: <MASKED_FLIGHT_TIME>."
+    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME>."
+    "A delay has occurred for {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is delayed. Expected time of departure: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. Departure will now take place at <MASKED_FLIGHT_TIME>."
+    "Due to unexpected reasons {flight} <MASKED_FLIGHT_NUM> has been delayed to <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is running late. It’s now scheduled for <MASKED_FLIGHT_TIME>."
+    "There’s been a delay for {flight} <MASKED_FLIGHT_NUM>. The departure time is <MASKED_FLIGHT_TIME>."
+    "We regret to announce that {flight} <MASKED_FLIGHT_NUM> has been delayed to <MASKED_FLIGHT_TIME>."
+    "A revised schedule for {flight} <MASKED_FLIGHT_NUM> shows departure at <MASKED_FLIGHT_TIME>."
+    "The current status of {flight} <MASKED_FLIGHT_NUM> is delayed. The flight will leave at <MASKED_FLIGHT_TIME>."
+    "Please note: {flight} <MASKED_FLIGHT_NUM> has been delayed. Departure is at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is behind schedule. Expect departure at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is experiencing a delay. Adjusted time: <MASKED_FLIGHT_TIME>."
+    "We apologize for the delay. {flight} <MASKED_FLIGHT_NUM> is now scheduled for <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME> due to a delay."
+    "{flight} <MASKED_FLIGHT_NUM> has a revised departure time: <MASKED_FLIGHT_TIME>."
+    "The adjusted departure time for {flight} <MASKED_FLIGHT_NUM> is <MASKED_FLIGHT_TIME>."
+    "A delay has been reported for {flight} <MASKED_FLIGHT_NUM>. The new time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. Please plan for departure at <MASKED_FLIGHT_TIME>."
+    "Travel update: {flight} <MASKED_FLIGHT_NUM> is delayed. Scheduled time is now <MASKED_FLIGHT_TIME>."
+    "Due to scheduling issues {flight} <MASKED_FLIGHT_NUM> has been delayed to <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is affected by a delay. The new departure time is <MASKED_FLIGHT_TIME>."
+    "A delay impacts {flight} <MASKED_FLIGHT_NUM>. Expected departure is at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is now delayed. Departure will occur at <MASKED_FLIGHT_TIME>."
+    "Due to unexpected reasons {flight} <MASKED_FLIGHT_NUM> is delayed. Please expect it at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. New time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is running late. Departure is set for <MASKED_FLIGHT_TIME>."
+    "We apologize for the delay. The adjusted departure time for {flight} <MASKED_FLIGHT_NUM> is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> will depart later than planned. The new time is <MASKED_FLIGHT_TIME>."
+    "Delayed: {flight} <MASKED_FLIGHT_NUM>. Updated time of departure: <MASKED_FLIGHT_TIME>."
+    "The updated schedule shows {flight} <MASKED_FLIGHT_NUM> departing at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. Adjusted time for departure is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME> due to delays."
+    "Unfortunately there’s a delay for {flight} <MASKED_FLIGHT_NUM>. Please expect it to depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. Apologies for the inconvenience. New departure time: <MASKED_FLIGHT_TIME>."
+    "We’re sorry to inform you that {flight} <MASKED_FLIGHT_NUM> is delayed. The updated schedule is <MASKED_FLIGHT_TIME>."
+    "The latest update shows a delay for {flight} <MASKED_FLIGHT_NUM>. Departure is now set for <MASKED_FLIGHT_TIME>."
+    "Due to operational reasons {flight} <MASKED_FLIGHT_NUM> is delayed. New departure is scheduled for <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been rescheduled due to a delay. Please check departure time: <MASKED_FLIGHT_TIME>."
+    "We regret the delay for {flight} <MASKED_FLIGHT_NUM>. Departure is now expected at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. We appreciate your patience as we now plan for departure at <MASKED_FLIGHT_TIME>."
+    "Travel update: A delay affects {flight} <MASKED_FLIGHT_NUM>. Revised time: <MASKED_FLIGHT_TIME>."
+    "Thank you for your understanding. {flight} <MASKED_FLIGHT_NUM> is delayed to <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> will be delayed. The departure time is rescheduled for <MASKED_FLIGHT_TIME>."
+    "The departure time for {flight} <MASKED_FLIGHT_NUM> has been changed. Expect it to leave at <MASKED_FLIGHT_TIME>."
+    "There’s been a change in schedule. {flight} <MASKED_FLIGHT_NUM> is delayed until <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The updated time is <MASKED_FLIGHT_TIME>. Thank you for your patience."
+    "The current status of {flight} <MASKED_FLIGHT_NUM> is delayed. Departure is expected at <MASKED_FLIGHT_TIME>."
+    "A delay has been reported for {flight} <MASKED_FLIGHT_NUM>. It is now scheduled to leave at <MASKED_FLIGHT_TIME>."
+    "The revised departure schedule for {flight} <MASKED_FLIGHT_NUM> is <MASKED_FLIGHT_TIME> due to a delay."
+    "{flight} <MASKED_FLIGHT_NUM> has been impacted by a delay. Departure time is now <MASKED_FLIGHT_TIME>."
+    "Due to unexpected circumstances {flight} <MASKED_FLIGHT_NUM> will depart later than expected at <MASKED_FLIGHT_TIME>."
+    "Our apologies for the inconvenience. {flight} <MASKED_FLIGHT_NUM> has been delayed to <MASKED_FLIGHT_TIME>."
+    "We understand your concern. {flight} <MASKED_FLIGHT_NUM> is delayed. It will now depart at <MASKED_FLIGHT_TIME>."
+    "The departure for {flight} <MASKED_FLIGHT_NUM> has been delayed. Updated time is <MASKED_FLIGHT_TIME>."
+    "A flight delay for {flight} <MASKED_FLIGHT_NUM> has been reported. Please plan for <MASKED_FLIGHT_TIME> departure."
+    "{flight} <MASKED_FLIGHT_NUM> will now leave later than scheduled. Expected time: <MASKED_FLIGHT_TIME>."
+    "Unfortunately a delay impacts {flight} <MASKED_FLIGHT_NUM>. The new time is <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is delayed. Please note the revised time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been rescheduled to depart later than expected. New time: <MASKED_FLIGHT_TIME>."
+    "The schedule for {flight} <MASKED_FLIGHT_NUM> has been modified due to a delay. Updated time: <MASKED_FLIGHT_TIME>."
+    "A delay affects {flight} <MASKED_FLIGHT_NUM>. Please expect departure at <MASKED_FLIGHT_TIME>."
+    "The updated departure time for {flight} <MASKED_FLIGHT_NUM> is <MASKED_FLIGHT_TIME> due to a delay."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is delayed. We anticipate departure at <MASKED_FLIGHT_TIME>."
+    "Please note that {flight} <MASKED_FLIGHT_NUM> is running late. Departure is now scheduled for <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed and will depart later than planned at <MASKED_FLIGHT_TIME>."
+    "We’re sorry for the delay. {flight} <MASKED_FLIGHT_NUM> is now set to depart at <MASKED_FLIGHT_TIME>."
+    "The current schedule shows {flight} <MASKED_FLIGHT_NUM> departing later than expected at <MASKED_FLIGHT_TIME>."
+    "A delay has affected {flight} <MASKED_FLIGHT_NUM>. Departure is rescheduled for <MASKED_FLIGHT_TIME>."
+    "Apologies for the delay to {flight} <MASKED_FLIGHT_NUM>. Please expect departure at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is running late. The revised departure time is <MASKED_FLIGHT_TIME>."
+    "Due to operational issues {flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME>."
+    "Thank you for waiting. {flight} <MASKED_FLIGHT_NUM> is delayed. Updated schedule: <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is experiencing delays. Departure will occur at <MASKED_FLIGHT_TIME>."
+    "We apologize for the delayed departure of {flight} <MASKED_FLIGHT_NUM>. New time: <MASKED_FLIGHT_TIME>."
+    "The adjusted schedule for {flight} <MASKED_FLIGHT_NUM> shows departure at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. It will now depart at <MASKED_FLIGHT_TIME>."
+    "An operational delay has affected {flight} <MASKED_FLIGHT_NUM>. Expected departure: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed due to unforeseen issues. New departure: <MASKED_FLIGHT_TIME>."
+    "Our team is working to resolve the delay. {flight} <MASKED_FLIGHT_NUM> will now leave at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is delayed. Scheduled departure is now <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been postponed. Departure is now set for <MASKED_FLIGHT_TIME>."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure is <MASKED_FLIGHT_TIME>."
+    "There is a delay for {flight} <MASKED_FLIGHT_NUM>. It is now departing at <MASKED_FLIGHT_TIME>."
+    "Due to unforeseen circumstances {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "The updated schedule shows that {flight} <MASKED_FLIGHT_NUM> will be departing at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The new estimated departure time is <MASKED_FLIGHT_TIME>."
+    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The departure time has been rescheduled to <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is running late. Please expect departure at <MASKED_FLIGHT_TIME>."
+    "Due to weather conditions {flight} <MASKED_FLIGHT_NUM> has been delayed. It will now depart at <MASKED_FLIGHT_TIME>."
+    "The status of {flight} <MASKED_FLIGHT_NUM> shows a delay. New departure time: <MASKED_FLIGHT_TIME>."
+    "We apologize for the delay. {flight} <MASKED_FLIGHT_NUM> is now departing at <MASKED_FLIGHT_TIME>."
+    "We regret that {flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure time is <MASKED_FLIGHT_TIME>."
+    "Unfortunately there has been a delay for {flight} <MASKED_FLIGHT_NUM>. Departure will be at <MASKED_FLIGHT_TIME>."
+    "The scheduled departure for {flight} <MASKED_FLIGHT_NUM> has been delayed. The new time is <MASKED_FLIGHT_TIME>."
+    "There's a delay with {flight} <MASKED_FLIGHT_NUM>. It will now depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has experienced a delay. New departure time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure time is <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been delayed. It is now set to depart at <MASKED_FLIGHT_TIME>."
+    "We’re sorry to report a delay for {flight} <MASKED_FLIGHT_NUM>. The departure time has been changed to <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The revised time of departure is <MASKED_FLIGHT_TIME>."
+    "The delay for {flight} <MASKED_FLIGHT_NUM> has been confirmed. Departure will be at <MASKED_FLIGHT_TIME>."
+    "We apologize for the inconvenience but {flight} <MASKED_FLIGHT_NUM> is delayed. New departure: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. We expect a departure at <MASKED_FLIGHT_TIME>."
+    "There has been a delay with {flight} <MASKED_FLIGHT_NUM>. The new expected departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed due to unforeseen reasons. Departure now set for <MASKED_FLIGHT_TIME>."
+    "We’re sorry for the delay with {flight} <MASKED_FLIGHT_NUM>. The updated departure time is <MASKED_FLIGHT_TIME>."
+    "There’s a delay for {flight} <MASKED_FLIGHT_NUM> and it will now leave at <MASKED_FLIGHT_TIME>."
+    "Apologies for the delay {flight} <MASKED_FLIGHT_NUM>. Please expect the new departure time at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed and now departing at <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> will be delayed. Expect a new departure at <MASKED_FLIGHT_TIME>."
+    "Due to operational delays {flight} <MASKED_FLIGHT_NUM> is departing later at <MASKED_FLIGHT_TIME>."
+    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. Departure will now take place at <MASKED_FLIGHT_TIME>."
+    "Please note that {flight} <MASKED_FLIGHT_NUM> is delayed. It is now scheduled to depart at <MASKED_FLIGHT_TIME>."
+    "A delay has been reported for {flight} <MASKED_FLIGHT_NUM>. The updated time of departure is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is running late. New expected departure time: <MASKED_FLIGHT_TIME>."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is delayed. It will now depart at <MASKED_FLIGHT_TIME>."
+    "A delay affects {flight} <MASKED_FLIGHT_NUM>. New departure time: <MASKED_FLIGHT_TIME>."
+    "There’s been a delay for {flight} <MASKED_FLIGHT_NUM>. Expect it to depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The departure time is now <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been delayed. The rescheduled departure time is <MASKED_FLIGHT_TIME>."
+    "Due to technical issues {flight} <MASKED_FLIGHT_NUM> is delayed. New time: <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The revised departure is now <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure time is now <MASKED_FLIGHT_TIME>."
+    "We apologize for the delay of {flight} <MASKED_FLIGHT_NUM>. The new time of departure is <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is running late. The new departure time is <MASKED_FLIGHT_TIME>."
+    "There’s a delay for {flight} <MASKED_FLIGHT_NUM> and it will now depart at <MASKED_FLIGHT_TIME>."
+    "Please note that {flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure is at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed due to weather conditions. New departure time is <MASKED_FLIGHT_TIME>."
+    "We apologize for the inconvenience but {flight} <MASKED_FLIGHT_NUM> is delayed. New departure time: <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> will be delayed. The updated departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The new departure is scheduled for <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed and now departing at <MASKED_FLIGHT_TIME>."
+    "A delay has impacted {flight} <MASKED_FLIGHT_NUM>. The updated departure is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> due to a delay."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been delayed. The new time of departure is <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is delayed. The new scheduled time is <MASKED_FLIGHT_TIME>."
+    "The delay for {flight} <MASKED_FLIGHT_NUM> has been confirmed. Please expect departure at <MASKED_FLIGHT_TIME>."
+    "The status of {flight} <MASKED_FLIGHT_NUM> is delayed. It will now depart at <MASKED_FLIGHT_TIME>."
+    "We’re sorry but {flight} <MASKED_FLIGHT_NUM> is delayed. The revised departure time is <MASKED_FLIGHT_TIME>."
+    "Due to unforeseen circumstances {flight} <MASKED_FLIGHT_NUM> is delayed. It will now leave at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. The new time is <MASKED_FLIGHT_TIME>."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. Please check the updated departure time: <MASKED_FLIGHT_TIME>."
+    "The departure of {flight} <MASKED_FLIGHT_NUM> is delayed. The new time of departure is <MASKED_FLIGHT_TIME>."
+    "We regret the delay of {flight} <MASKED_FLIGHT_NUM>. It is now scheduled to depart at <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is delayed. The updated schedule shows departure at <MASKED_FLIGHT_TIME>."
+    "There is a delay with {flight} <MASKED_FLIGHT_NUM>. The rescheduled departure is at <MASKED_FLIGHT_TIME>."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been delayed. New departure time: <MASKED_FLIGHT_TIME>."
+    "Unfortunately there is a delay for {flight} <MASKED_FLIGHT_NUM>. The updated time of departure is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "Due to operational delays {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "We're sorry for the delay {flight} <MASKED_FLIGHT_NUM>. The revised time of departure is <MASKED_FLIGHT_TIME>."
+    "There’s a delay with {flight} <MASKED_FLIGHT_NUM>. The updated departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has experienced a delay. New time of departure: <MASKED_FLIGHT_TIME>."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure is at <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME> due to a delay."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. New departure time: <MASKED_FLIGHT_TIME>."
+    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> is delayed. The new time is <MASKED_FLIGHT_TIME>."
+    "There is a delay for {flight} <MASKED_FLIGHT_NUM>. The revised departure time is <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is delayed. Please expect departure at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is delayed. It will depart at <MASKED_FLIGHT_TIME>."
+    "Due to unforeseen circumstances {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "The departure time for {flight} <MASKED_FLIGHT_NUM> has been updated. New time: <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is delayed. Please expect to depart at <MASKED_FLIGHT_TIME>."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. The new expected departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The updated time for departure is <MASKED_FLIGHT_TIME>."
+    "We’re sorry but {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME> due to a delay."
+    "There is a delay affecting {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is delayed. It will depart at <MASKED_FLIGHT_TIME>."
+    "We apologize for the delay. {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "Unfortunately there’s a delay for {flight} <MASKED_FLIGHT_NUM>. Departure is now at <MASKED_FLIGHT_TIME>."
+    "Due to weather conditions {flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> is delayed. Please expect the new departure time at <MASKED_FLIGHT_TIME>."
+    "There is a delay for {flight} <MASKED_FLIGHT_NUM>. The revised departure is at <MASKED_FLIGHT_TIME>."
+    "We regret the delay with {flight} <MASKED_FLIGHT_NUM>. It will now depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. Please check back for the updated departure at <MASKED_FLIGHT_TIME>."
+    "Due to technical issues {flight} <MASKED_FLIGHT_NUM> has been delayed. It will now depart at <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has been delayed. It will depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> is delayed. The revised departure time is <MASKED_FLIGHT_TIME>."
+    "There has been a delay for {flight} <MASKED_FLIGHT_NUM>. Please expect the updated departure at <MASKED_FLIGHT_TIME>."
+    "Your flight {flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "We regret the delay for {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The updated departure time is <MASKED_FLIGHT_TIME>."
+    "Due to operational delays {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME>."
+    "Apologies for the delay. {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is delayed. It will depart at <MASKED_FLIGHT_TIME>."
+    "The status of {flight} <MASKED_FLIGHT_NUM> shows a delay. The new time for departure is <MASKED_FLIGHT_TIME>."
+    "There’s a delay for {flight} <MASKED_FLIGHT_NUM>. The updated time is <MASKED_FLIGHT_TIME>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has been delayed. New departure time: <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> will depart at <MASKED_FLIGHT_TIME> due to a delay."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. Expect departure at <MASKED_FLIGHT_TIME>."
+    "There’s a delay with {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+    "The departure for {flight} <MASKED_FLIGHT_NUM> has been delayed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed. The revised time is <MASKED_FLIGHT_TIME>."
+    "We apologize for the delay of {flight} <MASKED_FLIGHT_NUM>. The new expected time is <MASKED_FLIGHT_TIME>."
+    "Due to a delay {flight} <MASKED_FLIGHT_NUM> is now departing at <MASKED_FLIGHT_TIME>."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is delayed. The new scheduled departure time is <MASKED_FLIGHT_TIME>."
+    "We’re sorry for the delay with {flight} <MASKED_FLIGHT_NUM>. The departure is now at <MASKED_FLIGHT_TIME>."
+    "There’s a delay for {flight} <MASKED_FLIGHT_NUM>. Please check the updated departure time at <MASKED_FLIGHT_TIME>."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is delayed. New departure time is <MASKED_FLIGHT_TIME>."
+    "Unfortunately there’s a delay for {flight} <MASKED_FLIGHT_NUM>. The new departure time is <MASKED_FLIGHT_TIME>."
+    "There has been a delay with {flight} <MASKED_FLIGHT_NUM>. Expect to depart at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is delayed and now departing at <MASKED_FLIGHT_TIME>."
+    "The delay for {flight} <MASKED_FLIGHT_NUM> is confirmed. The new departure time is <MASKED_FLIGHT_TIME>."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> will now depart at <MASKED_FLIGHT_TIME>."
+]
 
     "CANCELLED": [
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for further assistance.",
-    "{flight} <MASKED_FLIGHT_NUM> is no longer operating. Contact support for next steps.",
-    "We’re sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled.",
-    "{flight} <MASKED_FLIGHT_NUM> has been cancelled due to unforeseen circumstances.",
-    "Cancellation notice: {flight} <MASKED_FLIGHT_NUM> is not flying. Contact support.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for further assistance.",
-    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> is no longer operating. Kindly get in touch with customer service for help.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. For further assistance, please contact us.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support to make alternative arrangements.",
-    "Due to unforeseen circumstances, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team for assistance.",
-    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer support for next steps.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us for rebooking assistance.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is no longer available. Please contact customer service for more information.",
-    "We're sorry to report that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact support for help with your next steps.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> is cancelled. For more information, please contact our customer support team.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> will not be operating. Please reach out to customer support for assistance.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our support team for your options.",
-    "Due to a change in scheduling, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact customer support for rebooking.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please get in touch with support for assistance.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with our support team for rebooking assistance.",
-    "We're sorry to announce that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for details.",
-    "We regret that {flight} <MASKED_FLIGHT_NUM> is cancelled. Our customer support team is available to assist with your next steps.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> will not be departing. Please reach out to customer service for alternatives.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for help in rebooking your flight.",
-    "We’re sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our customer support is here to help.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> will not operate. Please contact us for support in making alternate travel arrangements.",
-    "We apologize for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact customer service for assistance.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us for further assistance or rebooking.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Reach out to customer support for alternatives.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for rebooking or additional assistance.",
-    "We’re sorry, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. For more information, please contact customer support.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our support team to make alternative arrangements.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> will not depart. Please reach out to customer support for further help.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our team is available for rebooking and assistance.",
-    "We’re sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for assistance.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer support for further options and rebooking.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our customer service team is ready to assist.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for alternative flight arrangements.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with our support team to make alternate arrangements.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. For assistance, please reach out to customer support.",
-    "We apologize for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact support to explore rebooking options.",
-    "We're sorry to announce that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service for rebooking.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> will not depart. For assistance, please get in touch with customer support.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our customer support team is available to help you rebook.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for further instructions.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer support for alternate flight options."
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for alternatives.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. For assistance with rebooking, please contact us.",
-    "We apologize for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer support for your options.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for alternative arrangements.",
-    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> will not operate. Please contact customer support to make alternative travel arrangements.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. For more information, please reach out to customer service.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak to our support team for further options.",
-    "Due to unforeseen circumstances, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for rebooking.",
-    "We are sorry to report that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance with rebooking.",
-    "We regret that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for help with rescheduling your flight.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please get in touch with customer support for rebooking.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact customer support for rebooking options.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our support team will assist with your next steps.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Our customer service team will be happy to assist with alternative options.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> will not depart as scheduled. Please contact support for further assistance.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance in finding an alternate flight.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our support team is available to help you rebook.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. For help with rebooking, please reach out to customer service.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for further assistance.",
-    "We’re sorry to announce that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak to customer support for rebooking.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us for help in rescheduling your flight.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with our customer support team for more details.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> is no longer available. Please reach out to customer service for further assistance.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us for information on alternative flights.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer service to explore rebooking options.",
-    "We regret that {flight} <MASKED_FLIGHT_NUM> is cancelled. Our customer support team is ready to assist with your next steps.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer service to reschedule.",
-    "We’re sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. For rebooking assistance, please contact our support team.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for help with your travel plans.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team to explore your options.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> will not be departing. Contact support for information on how to rebook your flight.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for your next steps.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> has been cancelled. For further information, please get in touch with customer support.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is no longer scheduled. Contact customer support for help with rebooking.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support to help with rescheduling.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support to explore options.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> will not depart as planned. Please contact us for rebooking options.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support to arrange alternative flights.",
-    "We’re sorry to announce that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for assistance with rebooking.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> will not operate. Please contact customer service for more information about your options.",
-    "We apologize for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact support for your options.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support to rebook.",
-    "We regret that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact our customer service team for information on rebooking.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for further arrangements.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance with rebooking your flight."
-    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for further assistance.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with our support team for alternative arrangements.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> will not operate. Please reach out to customer support for rebooking assistance.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our support team will help you find another flight.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer service to rebook your flight.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please contact customer support for information on alternatives.",
-    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us to explore other travel options.",
-    "Apologies for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for rebooking assistance.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer support to reschedule your flight.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Our team is ready to assist with alternative arrangements.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with our customer service team to arrange another flight.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to support to rebook your journey.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance with your rebooking.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> will not operate. Please contact customer support for your next steps.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for help with finding another flight.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. For help with rebooking, please reach out to customer support.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our support team for further assistance.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service for your next steps.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with customer service to explore rebooking options.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for rescheduling assistance.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for information on your options.",
-    "We regret that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with our team to arrange a new flight.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support to help rebook your flight.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please contact customer service for alternate arrangements.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support for rebooking assistance.",
-    "We apologize for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our team will help you find a new flight.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support for further assistance with rebooking.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service for rebooking options.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team to reschedule.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer support to help you book an alternative flight.",
-    "We’re sorry to announce that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer service to explore other flights.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us to discuss alternative options.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support to reschedule your flight.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for alternative flight options.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our customer service team for help with rebooking.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us for alternative travel arrangements.",
-    "We regret that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for rebooking assistance.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer support for your next steps.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> is no longer scheduled to depart. Please contact support for rebooking options.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for alternative travel arrangements.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please contact us for more information on your travel options.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer service for help with rescheduling.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service for further assistance.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. For more information, please contact customer support.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support for your next steps.",
-    "We apologize for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer support for your options.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support to discuss your options.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for assistance with rebooking.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> will not be departing. Please reach out to customer service for help with rebooking."
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our support team for rebooking options.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer service for assistance with finding another flight.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> will not be operating. Please contact customer service for alternate flight options.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with support for rebooking.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our customer service for your next steps.",
-    "We're sorry to announce that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact us to rebook or inquire about your options.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for further assistance.",
-    "We apologize for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for rebooking.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support to arrange an alternative flight.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> will no longer operate. Please get in touch with customer service for other options.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to support for a new flight booking.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service to explore new travel arrangements.",
-    "We regret that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak to customer service to find alternative options.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with support to arrange a new flight.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact customer service for rebooking assistance.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> will not be operating. Please reach out to support for rebooking.",
-    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service for further support.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team for alternate arrangements.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please contact customer service to reschedule.",
-    "Regrettably, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for assistance with rebooking.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> will not depart. Please contact customer service for further details and rebooking.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer support to rebook your flight.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with customer service for your rebooking options.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for information about rescheduling.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer service for alternate travel arrangements.",
-    "We’re sorry to announce that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer service for rebooking.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support to arrange an alternative flight.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with customer support for further assistance.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to support to find another flight.",
-    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service to explore your options.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> will not operate. Please reach out to customer service for rebooking assistance.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for a new booking or travel information.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team for rebooking assistance.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support to reschedule your trip.",
-    "We regret that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer service to arrange your alternative flight.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support to help you with rebooking.",
-    "We apologize for the inconvenience, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for help with your new flight.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> will not depart. Please speak with customer service to explore your options for rescheduling.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service to make alternative travel arrangements.",
-    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to support to reschedule.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact our customer service for further details.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak to customer support for your next steps.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer service for rebooking options.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer support for a new booking.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for assistance with rescheduling.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact support to help rebook your flight.",
-    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer service for alternate arrangements.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support for assistance.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please reach out to support to explore alternative flights.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer service for your next steps.",
-    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support for your options.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our customer service to reschedule.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to support for rebooking information.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer service for more details and rebooking options.",
-    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support to reschedule your flight.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support for assistance with your flight.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> will not be departing. Please reach out to customer service for further support.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for rebooking options.",
-    "We're sorry, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service to reschedule.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer support for further assistance.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer service for rescheduling.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with support to help you rebook.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for alternate arrangements.",
-    "Sadly, {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support to help with your travel needs.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer support for help rebooking your flight.",
-    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance.",
-    "Apologies, but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support for rebooking assistance.",
-    "Unfortunately, {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with our team for alternative travel options.",
-    "We apologize, but {flight} <MASKED_FLIGHT_NUM> is cancelled."
-    ],
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for further assistance."
+    "{flight} <MASKED_FLIGHT_NUM> is no longer operating. Contact support for next steps."
+    "We’re sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled."
+    "{flight} <MASKED_FLIGHT_NUM> has been cancelled due to unforeseen circumstances."
+    "Cancellation notice: {flight} <MASKED_FLIGHT_NUM> is not flying. Contact support."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for further assistance."
+    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> is no longer operating. Kindly get in touch with customer service for help."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. For further assistance please contact us."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support to make alternative arrangements."
+    "Due to unforeseen circumstances {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team for assistance."
+    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer support for next steps."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us for rebooking assistance."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is no longer available. Please contact customer service for more information."
+    "We're sorry to report that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact support for help with your next steps."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> is cancelled. For more information please contact our customer support team."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> will not be operating. Please reach out to customer support for assistance."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our support team for your options."
+    "Due to a change in scheduling {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact customer support for rebooking."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please get in touch with support for assistance."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with our support team for rebooking assistance."
+    "We're sorry to announce that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for details."
+    "We regret that {flight} <MASKED_FLIGHT_NUM> is cancelled. Our customer support team is available to assist with your next steps."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> will not be departing. Please reach out to customer service for alternatives."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for help in rebooking your flight."
+    "We’re sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our customer support is here to help."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> will not operate. Please contact us for support in making alternate travel arrangements."
+    "We apologize for the inconvenience but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact customer service for assistance."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us for further assistance or rebooking."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Reach out to customer support for alternatives."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for rebooking or additional assistance."
+    "We’re sorry but {flight} <MASKED_FLIGHT_NUM> has been cancelled. For more information please contact customer support."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our support team to make alternative arrangements."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> will not depart. Please reach out to customer support for further help."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our team is available for rebooking and assistance."
+    "We’re sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for assistance."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer support for further options and rebooking."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our customer service team is ready to assist."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for alternative flight arrangements."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with our support team to make alternate arrangements."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. For assistance please reach out to customer support."
+    "We apologize for the inconvenience but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact support to explore rebooking options."
+    "We're sorry to announce that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service for rebooking."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> will not depart. For assistance please get in touch with customer support."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our customer support team is available to help you rebook."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for further instructions."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer support for alternate flight options."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for alternatives."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. For assistance with rebooking please contact us."
+    "We apologize for the inconvenience but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer support for your options."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for alternative arrangements."
+    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> will not operate. Please contact customer support to make alternative travel arrangements."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. For more information please reach out to customer service."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak to our support team for further options."
+    "Due to unforeseen circumstances {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for rebooking."
+    "We are sorry to report that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance with rebooking."
+    "We regret that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for help with rescheduling your flight."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please get in touch with customer support for rebooking."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact customer support for rebooking options."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our support team will assist with your next steps."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Our customer service team will be happy to assist with alternative options."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> will not depart as scheduled. Please contact support for further assistance."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance in finding an alternate flight."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our support team is available to help you rebook."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. For help with rebooking please reach out to customer service."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for further assistance."
+    "We’re sorry to announce that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak to customer support for rebooking."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us for help in rescheduling your flight."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with our customer support team for more details."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> is no longer available. Please reach out to customer service for further assistance."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us for information on alternative flights."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer service to explore rebooking options."
+    "We regret that {flight} <MASKED_FLIGHT_NUM> is cancelled. Our customer support team is ready to assist with your next steps."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer service to reschedule."
+    "We’re sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. For rebooking assistance please contact our support team."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for help with your travel plans."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team to explore your options."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> will not be departing. Contact support for information on how to rebook your flight."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for your next steps."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> has been cancelled. For further information please get in touch with customer support."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is no longer scheduled. Contact customer support for help with rebooking."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support to help with rescheduling."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support to explore options."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> will not depart as planned. Please contact us for rebooking options."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support to arrange alternative flights."
+    "We’re sorry to announce that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for assistance with rebooking."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> will not operate. Please contact customer service for more information about your options."
+    "We apologize for the inconvenience but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact support for your options."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support to rebook."
+    "We regret that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact our customer service team for information on rebooking."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for further arrangements."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance with rebooking your flight."
+    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for further assistance."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with our support team for alternative arrangements."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> will not operate. Please reach out to customer support for rebooking assistance."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our support team will help you find another flight."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer service to rebook your flight."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please contact customer support for information on alternatives."
+    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us to explore other travel options."
+    "Apologies for the inconvenience but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for rebooking assistance."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer support to reschedule your flight."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Our team is ready to assist with alternative arrangements."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with our customer service team to arrange another flight."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to support to rebook your journey."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance with your rebooking."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> will not operate. Please contact customer support for your next steps."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for help with finding another flight."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. For help with rebooking please reach out to customer support."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our support team for further assistance."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service for your next steps."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with customer service to explore rebooking options."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for rescheduling assistance."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for information on your options."
+    "We regret that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with our team to arrange a new flight."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support to help rebook your flight."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please contact customer service for alternate arrangements."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support for rebooking assistance."
+    "We apologize for the inconvenience but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Our team will help you find a new flight."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support for further assistance with rebooking."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service for rebooking options."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team to reschedule."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer support to help you book an alternative flight."
+    "We’re sorry to announce that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer service to explore other flights."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us to discuss alternative options."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support to reschedule your flight."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for alternative flight options."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our customer service team for help with rebooking."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact us for alternative travel arrangements."
+    "We regret that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for rebooking assistance."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer support for your next steps."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> is no longer scheduled to depart. Please contact support for rebooking options."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer support for alternative travel arrangements."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please contact us for more information on your travel options."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer service for help with rescheduling."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service for further assistance."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. For more information please contact customer support."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support for your next steps."
+    "We apologize for the inconvenience but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer support for your options."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support to discuss your options."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for assistance with rebooking."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> will not be departing. Please reach out to customer service for help with rebooking."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our support team for rebooking options."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer service for assistance with finding another flight."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> will not be operating. Please contact customer service for alternate flight options."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with support for rebooking."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our customer service for your next steps."
+    "We're sorry to announce that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact us to rebook or inquire about your options."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support for further assistance."
+    "We apologize for the inconvenience but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for rebooking."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support to arrange an alternative flight."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> will no longer operate. Please get in touch with customer service for other options."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to support for a new flight booking."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service to explore new travel arrangements."
+    "We regret that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak to customer service to find alternative options."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with support to arrange a new flight."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Contact customer service for rebooking assistance."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> will not be operating. Please reach out to support for rebooking."
+    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service for further support."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team for alternate arrangements."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please contact customer service to reschedule."
+    "Regrettably {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for assistance with rebooking."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> will not depart. Please contact customer service for further details and rebooking."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer support to rebook your flight."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with customer service for your rebooking options."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for information about rescheduling."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer service for alternate travel arrangements."
+    "We’re sorry to announce that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer service for rebooking."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer support to arrange an alternative flight."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with customer support for further assistance."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to support to find another flight."
+    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service to explore your options."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> will not operate. Please reach out to customer service for rebooking assistance."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for a new booking or travel information."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to our support team for rebooking assistance."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support to reschedule your trip."
+    "We regret that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer service to arrange your alternative flight."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support to help you with rebooking."
+    "We apologize for the inconvenience but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for help with your new flight."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> will not depart. Please speak with customer service to explore your options for rescheduling."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer service to make alternative travel arrangements."
+    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to support to reschedule."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact our customer service for further details."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak to customer support for your next steps."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer service for rebooking options."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact customer support for a new booking."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service for assistance with rescheduling."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact support to help rebook your flight."
+    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer service for alternate arrangements."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support for assistance."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> is no longer operating. Please reach out to support to explore alternative flights."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer service for your next steps."
+    "We apologize for the inconvenience. {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support for your options."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact our customer service to reschedule."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to support for rebooking information."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer service for more details and rebooking options."
+    "We're sorry to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support to reschedule your flight."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with customer support for assistance with your flight."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> will not be departing. Please reach out to customer service for further support."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please contact support for rebooking options."
+    "We're sorry but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please reach out to customer service to reschedule."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> is cancelled. Please speak with customer support for further assistance."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer service for rescheduling."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> is cancelled. Please get in touch with support to help you rebook."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for alternate arrangements."
+    "Sadly {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support to help with your travel needs."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please speak with customer support for help rebooking your flight."
+    "We regret to inform you that {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please contact customer service for assistance."
+    "Apologies but {flight} <MASKED_FLIGHT_NUM> is cancelled. Please reach out to customer support for rebooking assistance."
+    "Unfortunately {flight} <MASKED_FLIGHT_NUM> has been cancelled. Please get in touch with our team for alternative travel options."
+    "We apologize but {flight} <MASKED_FLIGHT_NUM> is cancelled."
+    ]
     "DEPARTED": [
-    "{flight} <MASKED_FLIGHT_NUM> has already departed.",
-    "{flight} <MASKED_FLIGHT_NUM> has taken off and is no longer at the airport.",
-    "Departure complete: {flight} <MASKED_FLIGHT_NUM> has left.",
-    "{flight} <MASKED_FLIGHT_NUM> is in the air. It departed as scheduled.",
-    "{flight} <MASKED_FLIGHT_NUM> has already departed.",
-    "{flight} <MASKED_FLIGHT_NUM> is now in the air.",
-    "{flight} <MASKED_FLIGHT_NUM> has left the gate.",
-    "{flight} <MASKED_FLIGHT_NUM> is on its way.",
-    "{flight} <MASKED_FLIGHT_NUM> has already taken off.",
-    "{flight} <MASKED_FLIGHT_NUM> has departed and is en route.",
-    "{flight} <MASKED_FLIGHT_NUM> has left for its destination.",
-    "{flight} <MASKED_FLIGHT_NUM> is no longer at the airport.",
-    "{flight} <MASKED_FLIGHT_NUM> is already airborne.",
-    "{flight} <MASKED_FLIGHT_NUM> is currently in flight.",
-    "{flight} <MASKED_FLIGHT_NUM> is already on its way to its destination.",
-    "{flight} <MASKED_FLIGHT_NUM> has taken off and is in the air.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is already airborne.",
-    "{flight} <MASKED_FLIGHT_NUM> is en route to its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has left the airport.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is already on its way.",
-    "{flight} <MASKED_FLIGHT_NUM> has taken off and is en route.",
-    "{flight} <MASKED_FLIGHT_NUM> is no longer on the ground.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is currently airborne.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has already left for its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on its way.",
-    "{flight} <MASKED_FLIGHT_NUM> has departed and is on route to the destination.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now in flight.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has taken off from the gate.",
-    "{flight} <MASKED_FLIGHT_NUM> is no longer at the airport and is on its way.",
-    "{flight} <MASKED_FLIGHT_NUM> has already departed and is in the air.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has left the ground.",
-    "{flight} <MASKED_FLIGHT_NUM> has departed and is in flight.",
-    "{flight} <MASKED_FLIGHT_NUM> has already left the airport and is en route.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is already in the air.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has already taken off.",
-    "{flight} <MASKED_FLIGHT_NUM> has departed and is heading to its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is already airborne and on its way.",
-    "{flight} <MASKED_FLIGHT_NUM> has already left for its journey.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is already on its way.",
-    "{flight} <MASKED_FLIGHT_NUM> has departed and is now en route.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is no longer at the gate.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has already taken off and is in flight.",
-    "{flight} <MASKED_FLIGHT_NUM> is already airborne and en route.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has left for its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has already departed from the airport.",
-    "{flight} <MASKED_FLIGHT_NUM> is currently on its way to the destination.",
-    "{flight} <MASKED_FLIGHT_NUM> has taken off and is now airborne.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is currently in the air.",
-    "{flight} <MASKED_FLIGHT_NUM> has already taken off from the airport.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is already airborne and heading to its destination.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has already departed and is on its way.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is already in flight and on its way.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has already left and is en route.",
-    "{flight} <MASKED_FLIGHT_NUM> has already left the airport and is airborne.",
-    "{flight} <MASKED_FLIGHT_NUM> is currently en route to its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has taken off and is airborne.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is already on its way to its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has departed and is en route.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is no longer at the gate.",
-    "{flight} <MASKED_FLIGHT_NUM> is already airborne and in transit.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has left and is now en route.",
-    "{flight} <MASKED_FLIGHT_NUM> is already in the air, heading to its destination.",
-    "{flight} <MASKED_FLIGHT_NUM> has already departed for its journey.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on its way to its destination.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has taken off and is heading to the destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is currently en route.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now airborne and heading to the destination.",
-    "{flight} <MASKED_FLIGHT_NUM> has already departed from the airport and is en route.",
-    "{flight} <MASKED_FLIGHT_NUM> is already in flight.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is no longer at the gate.",
-    "{flight} <MASKED_FLIGHT_NUM> has already taken off and is en route.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now in the air and heading to its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is already on its way to its destination.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has left the airport and is heading to its destination.",
-    "{flight} <MASKED_FLIGHT_NUM> has already departed from the airport and is en route.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has already left the gate and is airborne.",
-    "{flight} <MASKED_FLIGHT_NUM> has departed and is currently en route.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is on its way to the destination.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has already departed and is on its way.",
-    "{flight} <MASKED_FLIGHT_NUM> is already airborne and heading to the destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has already left the airport and is now airborne.",
-    "{flight} <MASKED_FLIGHT_NUM> has already taken off from the gate and is en route.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is on its way and has already left.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has already departed and is heading to its destination.",
-    "{flight} <MASKED_FLIGHT_NUM> has already taken off and is in flight.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is currently airborne and heading to its destination.",
-    "{flight} <MASKED_FLIGHT_NUM> is already en route.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is already on its way to its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has already left for its destination.",
-    "{flight} <MASKED_FLIGHT_NUM> is already airborne and heading to its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has already departed and is now in the air.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is already on its way to the airport's destination.",
-    "{flight} <MASKED_FLIGHT_NUM> has taken off and is now airborne.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now en route to the destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has already departed and is currently en route.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has already taken off and is now in flight.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is no longer at the airport and is on its way.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is already airborne and heading to its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has already departed from the airport.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has left the gate and is now in flight.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has already left and is en route.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is already airborne and in flight.",
-    "{flight} <MASKED_FLIGHT_NUM> is already on its way.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is in flight and heading to its destination.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is already en route to its destination.",
+    "{flight} <MASKED_FLIGHT_NUM> has already departed."
+    "{flight} <MASKED_FLIGHT_NUM> has taken off and is no longer at the airport."
+    "Departure complete: {flight} <MASKED_FLIGHT_NUM> has left."
+    "{flight} <MASKED_FLIGHT_NUM> is in the air. It departed as scheduled."
+    "{flight} <MASKED_FLIGHT_NUM> has already departed."
+    "{flight} <MASKED_FLIGHT_NUM> is now in the air."
+    "{flight} <MASKED_FLIGHT_NUM> has left the gate."
+    "{flight} <MASKED_FLIGHT_NUM> is on its way."
+    "{flight} <MASKED_FLIGHT_NUM> has already taken off."
+    "{flight} <MASKED_FLIGHT_NUM> has departed and is en route."
+    "{flight} <MASKED_FLIGHT_NUM> has left for its destination."
+    "{flight} <MASKED_FLIGHT_NUM> is no longer at the airport."
+    "{flight} <MASKED_FLIGHT_NUM> is already airborne."
+    "{flight} <MASKED_FLIGHT_NUM> is currently in flight."
+    "{flight} <MASKED_FLIGHT_NUM> is already on its way to its destination."
+    "{flight} <MASKED_FLIGHT_NUM> has taken off and is in the air."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is already airborne."
+    "{flight} <MASKED_FLIGHT_NUM> is en route to its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has left the airport."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is already on its way."
+    "{flight} <MASKED_FLIGHT_NUM> has taken off and is en route."
+    "{flight} <MASKED_FLIGHT_NUM> is no longer on the ground."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is currently airborne."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has already left for its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on its way."
+    "{flight} <MASKED_FLIGHT_NUM> has departed and is on route to the destination."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now in flight."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has taken off from the gate."
+    "{flight} <MASKED_FLIGHT_NUM> is no longer at the airport and is on its way."
+    "{flight} <MASKED_FLIGHT_NUM> has already departed and is in the air."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has left the ground."
+    "{flight} <MASKED_FLIGHT_NUM> has departed and is in flight."
+    "{flight} <MASKED_FLIGHT_NUM> has already left the airport and is en route."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is already in the air."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has already taken off."
+    "{flight} <MASKED_FLIGHT_NUM> has departed and is heading to its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is already airborne and on its way."
+    "{flight} <MASKED_FLIGHT_NUM> has already left for its journey."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is already on its way."
+    "{flight} <MASKED_FLIGHT_NUM> has departed and is now en route."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is no longer at the gate."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has already taken off and is in flight."
+    "{flight} <MASKED_FLIGHT_NUM> is already airborne and en route."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has left for its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has already departed from the airport."
+    "{flight} <MASKED_FLIGHT_NUM> is currently on its way to the destination."
+    "{flight} <MASKED_FLIGHT_NUM> has taken off and is now airborne."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is currently in the air."
+    "{flight} <MASKED_FLIGHT_NUM> has already taken off from the airport."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is already airborne and heading to its destination."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has already departed and is on its way."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is already in flight and on its way."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has already left and is en route."
+    "{flight} <MASKED_FLIGHT_NUM> has already left the airport and is airborne."
+    "{flight} <MASKED_FLIGHT_NUM> is currently en route to its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has taken off and is airborne."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is already on its way to its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has departed and is en route."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is no longer at the gate."
+    "{flight} <MASKED_FLIGHT_NUM> is already airborne and in transit."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has left and is now en route."
+    "{flight} <MASKED_FLIGHT_NUM> is already in the air heading to its destination."
+    "{flight} <MASKED_FLIGHT_NUM> has already departed for its journey."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on its way to its destination."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has taken off and is heading to the destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is currently en route."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now airborne and heading to the destination."
+    "{flight} <MASKED_FLIGHT_NUM> has already departed from the airport and is en route."
+    "{flight} <MASKED_FLIGHT_NUM> is already in flight."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is no longer at the gate."
+    "{flight} <MASKED_FLIGHT_NUM> has already taken off and is en route."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now in the air and heading to its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is already on its way to its destination."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has left the airport and is heading to its destination."
+    "{flight} <MASKED_FLIGHT_NUM> has already departed from the airport and is en route."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has already left the gate and is airborne."
+    "{flight} <MASKED_FLIGHT_NUM> has departed and is currently en route."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is on its way to the destination."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has already departed and is on its way."
+    "{flight} <MASKED_FLIGHT_NUM> is already airborne and heading to the destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has already left the airport and is now airborne."
+    "{flight} <MASKED_FLIGHT_NUM> has already taken off from the gate and is en route."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is on its way and has already left."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has already departed and is heading to its destination."
+    "{flight} <MASKED_FLIGHT_NUM> has already taken off and is in flight."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is currently airborne and heading to its destination."
+    "{flight} <MASKED_FLIGHT_NUM> is already en route."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is already on its way to its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has already left for its destination."
+    "{flight} <MASKED_FLIGHT_NUM> is already airborne and heading to its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has already departed and is now in the air."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is already on its way to the airport's destination."
+    "{flight} <MASKED_FLIGHT_NUM> has taken off and is now airborne."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now en route to the destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has already departed and is currently en route."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has already taken off and is now in flight."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is no longer at the airport and is on its way."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is already airborne and heading to its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has already departed from the airport."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has left the gate and is now in flight."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has already left and is en route."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is already airborne and in flight."
+    "{flight} <MASKED_FLIGHT_NUM> is already on its way."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is in flight and heading to its destination."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is already en route to its destination."
     "Flight {flight} <MASKED_FLIGHT_NUM> has already left the airport and is now on its way."
-    ],
+    ]
     "BOARDING": [
-    "{flight} <MASKED_FLIGHT_NUM> is currently boarding and is scheduled to depart at <MASKED_FLIGHT_TIME>.",
-    "Boarding alert: {flight} <MASKED_FLIGHT_NUM> is at the gate and will leave at <MASKED_FLIGHT_TIME>.",
-    "Passengers for {flight} <MASKED_FLIGHT_NUM> are boarding now. Departure: <MASKED_FLIGHT_TIME>.",
-    "It’s boarding time for {flight} <MASKED_FLIGHT_NUM>. Scheduled to leave at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is boarding passengers. Departure remains at <MASKED_FLIGHT_TIME>.",
-    "{flight} <MASKED_FLIGHT_NUM> is currently boarding.",
-    "Boarding is in progress for {flight} <MASKED_FLIGHT_NUM>.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> has begun.",
-    "Passengers are boarding for {flight} <MASKED_FLIGHT_NUM>.",
-    "{flight} <MASKED_FLIGHT_NUM> is now open for boarding.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM>.",
-    "{flight} <MASKED_FLIGHT_NUM> is currently boarding at the gate.",
-    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for boarding.",
-    "Boarding has commenced for {flight} <MASKED_FLIGHT_NUM>.",
-    "{flight} <MASKED_FLIGHT_NUM> is actively boarding.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is now underway.",
-    "Gate {gate} is open for {flight} <MASKED_FLIGHT_NUM> boarding.",
-    "Passengers can now board {flight} <MASKED_FLIGHT_NUM>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is currently in progress.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started at the gate.",
-    "{flight} <MASKED_FLIGHT_NUM> is now in the boarding phase.",
-    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are now open.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is underway.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is actively taking place.",
-    "Boarding is in progress for {flight} <MASKED_FLIGHT_NUM>, please proceed to the gate.",
-    "Boarding is starting for {flight} <MASKED_FLIGHT_NUM> at the gate.",
-    "{flight} <MASKED_FLIGHT_NUM> is now being boarded.",
-    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is open for passengers.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now ready for boarding.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> has begun at gate {gate}.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is now in full swing.",
-    "Please proceed to the gate for {flight} <MASKED_FLIGHT_NUM> boarding.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at the gate.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is actively boarding passengers.",
-    "Boarding is in progress for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Gate {gate} is now open for {flight} <MASKED_FLIGHT_NUM> boarding.",
-    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is now active.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has begun boarding.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is in full swing.",
-    "{flight} <MASKED_FLIGHT_NUM> is in the middle of the boarding process.",
-    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> has opened.",
-    "Now boarding passengers for {flight} <MASKED_FLIGHT_NUM> at the gate.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is ready for passengers to board.",
-    "{flight} <MASKED_FLIGHT_NUM> is now in the boarding phase.",
-    "The gate for {flight} <MASKED_FLIGHT_NUM> has opened for boarding.",
-    "{flight} <MASKED_FLIGHT_NUM> is actively boarding at this time.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is available now.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> has started at the gate.",
-    "Please proceed to gate {gate} for {flight} <MASKED_FLIGHT_NUM> boarding.",
-    "{flight} <MASKED_FLIGHT_NUM> is now open for passengers to board.",
-    "Boarding is currently happening for {flight} <MASKED_FLIGHT_NUM>.",
-    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at the designated gate.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has started its boarding process.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM>, please make your way to the gate.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is underway at the gate.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now boarding at the gate.",
-    "Gate {gate} is open for {flight} <MASKED_FLIGHT_NUM> to board.",
-    "Boarding is in progress for {flight} <MASKED_FLIGHT_NUM> at the assigned gate.",
-    "{flight} <MASKED_FLIGHT_NUM> is now open for passengers to board at the gate.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers for boarding.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has started its boarding phase.",
-    "Boarding has commenced for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "{flight} <MASKED_FLIGHT_NUM> is currently in the process of boarding passengers.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started, please proceed to the gate.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has begun the boarding process.",
-    "Now boarding passengers for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for boarding.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now in the process of boarding passengers.",
-    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "{flight} <MASKED_FLIGHT_NUM> is now actively boarding passengers.",
-    "Gate {gate} is open, and {flight} <MASKED_FLIGHT_NUM> is ready to board passengers.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is currently in the process of boarding.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM>, please proceed to gate {gate}.",
-    "{flight} <MASKED_FLIGHT_NUM> is actively boarding at this time.",
-    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are now open for passengers.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now boarding at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has started the boarding process at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now underway at gate {gate}.",
-    "Gate {gate} is open and {flight} <MASKED_FLIGHT_NUM> is boarding.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has opened for boarding.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is happening now at gate {gate}.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM>, please proceed to gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now in the boarding phase at gate {gate}.",
-    "Now boarding passengers for {flight} <MASKED_FLIGHT_NUM>, gate {gate} is open.",
-    "{flight} <MASKED_FLIGHT_NUM> is boarding now at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has opened its boarding gates.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is in progress at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has started boarding passengers.",
-    "Boarding is open for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Gate {gate} is now open, and {flight} <MASKED_FLIGHT_NUM> is boarding.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is underway at the gate.",
-    "{flight} <MASKED_FLIGHT_NUM> is now in the process of boarding at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> has begun at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now open at gate {gate}.",
-    "{flight} <MASKED_FLIGHT_NUM> is in the boarding phase at the gate.",
-    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are now open.",
-    "{flight} <MASKED_FLIGHT_NUM> has opened its gates for boarding.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers.",
-    "Now boarding passengers for {flight} <MASKED_FLIGHT_NUM>, please head to gate {gate}.",
-    "{flight} <MASKED_FLIGHT_NUM> is actively boarding at the gate.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> has started at gate {gate}.",
-    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are open and ready.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now in progress at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The gate {gate} for {flight} <MASKED_FLIGHT_NUM> is now open for boarding.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has begun the boarding process.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM>, please proceed to gate {gate}.",
-    "{flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is open at gate {gate}.",
-    "The gate is open for boarding for {flight} <MASKED_FLIGHT_NUM>.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers at gate {gate}.",
-    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "{flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is underway at gate {gate}.",
-    "Passengers are currently boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers for boarding at gate {gate}.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is now happening at gate {gate}.",
-    "Please proceed to gate {gate} for {flight} <MASKED_FLIGHT_NUM> boarding.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now open at gate {gate}.",
-    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> have been opened at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now in the boarding phase at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started at gate {gate}.",
-    "Now boarding passengers for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is currently in the process of boarding at gate {gate}.",
-    "Boarding has commenced for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has started its boarding process at gate {gate}.",
-    "Gate {gate} is now open for {flight} <MASKED_FLIGHT_NUM> boarding.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is currently taking place at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers at gate {gate}.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is currently taking place at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}.",
-    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are now open for passengers at gate {gate}.",
-    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Gate {gate} is open, and {flight} <MASKED_FLIGHT_NUM> is boarding passengers.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> has commenced at gate {gate}.",
-    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for passengers to board.",
-    "Boarding is in progress for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is available now at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is ready for boarding at gate {gate}.",
-    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The gate {gate} is open for {flight} <MASKED_FLIGHT_NUM> boarding passengers.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is currently in the boarding process.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is available now at gate {gate}.",
-    "Please proceed to gate {gate} to board {flight} <MASKED_FLIGHT_NUM>.",
-    "The boarding process has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers at gate {gate}.",
-    "Gate {gate} is now open for passengers to board {flight} <MASKED_FLIGHT_NUM>.",
-    "Boarding is now in progress for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is currently in progress at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers for boarding at gate {gate}.",
-    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is now open.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Please head to gate {gate} for {flight} <MASKED_FLIGHT_NUM> boarding.",
-    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is open and boarding has begun.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is in progress at gate {gate}.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is active at gate {gate}.",
-    "Now boarding at gate {gate} for {flight} <MASKED_FLIGHT_NUM>.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is currently in the process of boarding.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Gate {gate} for {flight} <MASKED_FLIGHT_NUM> is open for boarding.",
-    "The boarding gates are now open for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is underway at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is currently boarding at gate {gate}.",
-    "The gate {gate} is open for passengers to board {flight} <MASKED_FLIGHT_NUM>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now ready for boarding at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is actively taking place at gate {gate}.",
-    "Gate {gate} is open and boarding has started for {flight} <MASKED_FLIGHT_NUM>.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is in the process of boarding at gate {gate}.",
-    "Please proceed to gate {gate} to board {flight} <MASKED_FLIGHT_NUM>.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now in progress at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is available now at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is currently in the boarding process at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has begun the boarding process at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}.",
-    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for passengers to board.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is now active at gate {gate}.",
-    "Now boarding at gate {gate} for {flight} <MASKED_FLIGHT_NUM>.",
-    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for boarding passengers.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Gate {gate} is open and boarding is in progress for {flight} <MASKED_FLIGHT_NUM>.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is currently boarding at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has begun boarding at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is in progress at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is currently in the boarding phase at gate {gate}.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is in full swing at gate {gate}.",
-    "Gate {gate} is open, and passengers are now boarding for {flight} <MASKED_FLIGHT_NUM>.",
-    "Boarding is now happening at gate {gate} for {flight} <MASKED_FLIGHT_NUM>.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers for boarding at gate {gate}.",
-    "Please head to gate {gate} to board your {flight} <MASKED_FLIGHT_NUM>.",
-    "Gate {gate} is now accepting passengers for {flight} <MASKED_FLIGHT_NUM> boarding.",
-    "Boarding has commenced for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are open at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding at gate {gate}.",
-    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is in the boarding process at gate {gate}.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is currently taking place at gate {gate}.",
-    "Gate {gate} is now open for passengers to board {flight} <MASKED_FLIGHT_NUM>.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is in progress at gate {gate}.",
-    "Please make your way to gate {gate} for boarding {flight} <MASKED_FLIGHT_NUM>.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started and is happening at gate {gate}.",
-    "Passengers are boarding now for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is ready for boarding at gate {gate}.",
-    "Gate {gate} has opened for {flight} <MASKED_FLIGHT_NUM> boarding.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is currently boarding at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is available now at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> has started boarding at gate {gate}.",
-    "The boarding process has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}.",
-    "Boarding is now open for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is boarding now at gate {gate}.",
-    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for passengers to board.",
-    "Boarding is taking place for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Now boarding at gate {gate} for {flight} <MASKED_FLIGHT_NUM>.",
-    "Boarding is open for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Gate {gate} is currently open for boarding for {flight} <MASKED_FLIGHT_NUM>.",
-    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is open and boarding has started.",
-    "The boarding process is now underway for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Please proceed to gate {gate} as {flight} <MASKED_FLIGHT_NUM> begins boarding.",
-    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are now open at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has started the boarding process at gate {gate}.",
-    "Gate {gate} has been opened for {flight} <MASKED_FLIGHT_NUM> boarding.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is in the boarding process at gate {gate}.",
-    "Boarding is now in progress at gate {gate} for {flight} <MASKED_FLIGHT_NUM>.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is in the boarding stage at gate {gate}.",
-    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is now open at gate {gate}.",
-    "Boarding is actively underway for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now being boarded at gate {gate}.",
-    "Passengers for {flight} <MASKED_FLIGHT_NUM> can now board at gate {gate}.",
-    "Boarding is underway for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started at gate {gate}.",
-    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is open, and boarding is in progress.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is currently happening at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now boarding at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> is in the boarding process at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now active at gate {gate}.",
-    "The gate {gate} is now open, and {flight} <MASKED_FLIGHT_NUM> is boarding.",
-    "Boarding has started at gate {gate} for {flight} <MASKED_FLIGHT_NUM>.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}.",
-    "Gate {gate} is open for passengers to board {flight} <MASKED_FLIGHT_NUM>.",
-    "Boarding has commenced for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The flight {flight} <MASKED_FLIGHT_NUM> has opened boarding at gate {gate}.",
-    "The boarding process has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is in the process of boarding at gate {gate}.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "The gate for {flight} <MASKED_FLIGHT_NUM> has been opened for passengers to board.",
-    "Gate {gate} is open and passengers are now boarding for {flight} <MASKED_FLIGHT_NUM>.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is currently open at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is open at gate {gate}.",
-    "The gate {gate} has opened for {flight} <MASKED_FLIGHT_NUM> to begin boarding.",
-    "The boarding process is currently active for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Now boarding passengers at gate {gate} for {flight} <MASKED_FLIGHT_NUM>.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now in the process of boarding at gate {gate}.",
-    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> have opened at gate {gate}.",
-    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is currently boarding passengers at gate {gate}.",
-    "Boarding for {flight} <MASKED_FLIGHT_NUM> is happening now at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is boarding passengers at gate {gate}.",
-    "The gate for {flight} <MASKED_FLIGHT_NUM> is open for passengers to board.",
-    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is open and boarding is in progress.",
-    "Gate {gate} is now open for boarding passengers for {flight} <MASKED_FLIGHT_NUM>.",
-    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}.",
-    "Flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers for boarding at gate {gate}.",
+    "{flight} <MASKED_FLIGHT_NUM> is currently boarding and is scheduled to depart at <MASKED_FLIGHT_TIME>."
+    "Boarding alert: {flight} <MASKED_FLIGHT_NUM> is at the gate and will leave at <MASKED_FLIGHT_TIME>."
+    "Passengers for {flight} <MASKED_FLIGHT_NUM> are boarding now. Departure: <MASKED_FLIGHT_TIME>."
+    "It’s boarding time for {flight} <MASKED_FLIGHT_NUM>. Scheduled to leave at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is boarding passengers. Departure remains at <MASKED_FLIGHT_TIME>."
+    "{flight} <MASKED_FLIGHT_NUM> is currently boarding."
+    "Boarding is in progress for {flight} <MASKED_FLIGHT_NUM>."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> has begun."
+    "Passengers are boarding for {flight} <MASKED_FLIGHT_NUM>."
+    "{flight} <MASKED_FLIGHT_NUM> is now open for boarding."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM>."
+    "{flight} <MASKED_FLIGHT_NUM> is currently boarding at the gate."
+    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for boarding."
+    "Boarding has commenced for {flight} <MASKED_FLIGHT_NUM>."
+    "{flight} <MASKED_FLIGHT_NUM> is actively boarding."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is now underway."
+    "Gate {gate} is open for {flight} <MASKED_FLIGHT_NUM> boarding."
+    "Passengers can now board {flight} <MASKED_FLIGHT_NUM>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is currently in progress."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started at the gate."
+    "{flight} <MASKED_FLIGHT_NUM> is now in the boarding phase."
+    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are now open."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is underway."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is actively taking place."
+    "Boarding is in progress for {flight} <MASKED_FLIGHT_NUM> please proceed to the gate."
+    "Boarding is starting for {flight} <MASKED_FLIGHT_NUM> at the gate."
+    "{flight} <MASKED_FLIGHT_NUM> is now being boarded."
+    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is open for passengers."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now ready for boarding."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> has begun at gate {gate}."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is now in full swing."
+    "Please proceed to the gate for {flight} <MASKED_FLIGHT_NUM> boarding."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at the gate."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is actively boarding passengers."
+    "Boarding is in progress for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Gate {gate} is now open for {flight} <MASKED_FLIGHT_NUM> boarding."
+    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is now active."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has begun boarding."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is in full swing."
+    "{flight} <MASKED_FLIGHT_NUM> is in the middle of the boarding process."
+    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> has opened."
+    "Now boarding passengers for {flight} <MASKED_FLIGHT_NUM> at the gate."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is ready for passengers to board."
+    "{flight} <MASKED_FLIGHT_NUM> is now in the boarding phase."
+    "The gate for {flight} <MASKED_FLIGHT_NUM> has opened for boarding."
+    "{flight} <MASKED_FLIGHT_NUM> is actively boarding at this time."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is available now."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> has started at the gate."
+    "Please proceed to gate {gate} for {flight} <MASKED_FLIGHT_NUM> boarding."
+    "{flight} <MASKED_FLIGHT_NUM> is now open for passengers to board."
+    "Boarding is currently happening for {flight} <MASKED_FLIGHT_NUM>."
+    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at the designated gate."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has started its boarding process."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> please make your way to the gate."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is underway at the gate."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now boarding at the gate."
+    "Gate {gate} is open for {flight} <MASKED_FLIGHT_NUM> to board."
+    "Boarding is in progress for {flight} <MASKED_FLIGHT_NUM> at the assigned gate."
+    "{flight} <MASKED_FLIGHT_NUM> is now open for passengers to board at the gate."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers for boarding."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has started its boarding phase."
+    "Boarding has commenced for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "{flight} <MASKED_FLIGHT_NUM> is currently in the process of boarding passengers."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started please proceed to the gate."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has begun the boarding process."
+    "Now boarding passengers for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for boarding."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now in the process of boarding passengers."
+    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "{flight} <MASKED_FLIGHT_NUM> is now actively boarding passengers."
+    "Gate {gate} is open and {flight} <MASKED_FLIGHT_NUM> is ready to board passengers."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is currently in the process of boarding."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> please proceed to gate {gate}."
+    "{flight} <MASKED_FLIGHT_NUM> is actively boarding at this time."
+    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are now open for passengers."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now boarding at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has started the boarding process at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now underway at gate {gate}."
+    "Gate {gate} is open and {flight} <MASKED_FLIGHT_NUM> is boarding."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has opened for boarding."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is happening now at gate {gate}."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> please proceed to gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now in the boarding phase at gate {gate}."
+    "Now boarding passengers for {flight} <MASKED_FLIGHT_NUM> gate {gate} is open."
+    "{flight} <MASKED_FLIGHT_NUM> is boarding now at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has opened its boarding gates."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is in progress at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has started boarding passengers."
+    "Boarding is open for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Gate {gate} is now open and {flight} <MASKED_FLIGHT_NUM> is boarding."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is underway at the gate."
+    "{flight} <MASKED_FLIGHT_NUM> is now in the process of boarding at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> has begun at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now open at gate {gate}."
+    "{flight} <MASKED_FLIGHT_NUM> is in the boarding phase at the gate."
+    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are now open."
+    "{flight} <MASKED_FLIGHT_NUM> has opened its gates for boarding."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers."
+    "Now boarding passengers for {flight} <MASKED_FLIGHT_NUM> please head to gate {gate}."
+    "{flight} <MASKED_FLIGHT_NUM> is actively boarding at the gate."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> has started at gate {gate}."
+    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are open and ready."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now in progress at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The gate {gate} for {flight} <MASKED_FLIGHT_NUM> is now open for boarding."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has begun the boarding process."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> please proceed to gate {gate}."
+    "{flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is open at gate {gate}."
+    "The gate is open for boarding for {flight} <MASKED_FLIGHT_NUM>."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers at gate {gate}."
+    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "{flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is underway at gate {gate}."
+    "Passengers are currently boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers for boarding at gate {gate}."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is now happening at gate {gate}."
+    "Please proceed to gate {gate} for {flight} <MASKED_FLIGHT_NUM> boarding."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now open at gate {gate}."
+    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> have been opened at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now in the boarding phase at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started at gate {gate}."
+    "Now boarding passengers for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is currently in the process of boarding at gate {gate}."
+    "Boarding has commenced for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has started its boarding process at gate {gate}."
+    "Gate {gate} is now open for {flight} <MASKED_FLIGHT_NUM> boarding."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is currently taking place at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers at gate {gate}."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is currently taking place at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}."
+    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are now open for passengers at gate {gate}."
+    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Gate {gate} is open and {flight} <MASKED_FLIGHT_NUM> is boarding passengers."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> has commenced at gate {gate}."
+    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for passengers to board."
+    "Boarding is in progress for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is available now at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is ready for boarding at gate {gate}."
+    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The gate {gate} is open for {flight} <MASKED_FLIGHT_NUM> boarding passengers."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is currently in the boarding process."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is available now at gate {gate}."
+    "Please proceed to gate {gate} to board {flight} <MASKED_FLIGHT_NUM>."
+    "The boarding process has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers at gate {gate}."
+    "Gate {gate} is now open for passengers to board {flight} <MASKED_FLIGHT_NUM>."
+    "Boarding is now in progress for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is currently in progress at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers for boarding at gate {gate}."
+    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is now open."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Please head to gate {gate} for {flight} <MASKED_FLIGHT_NUM> boarding."
+    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is open and boarding has begun."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is in progress at gate {gate}."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is active at gate {gate}."
+    "Now boarding at gate {gate} for {flight} <MASKED_FLIGHT_NUM>."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is currently in the process of boarding."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Gate {gate} for {flight} <MASKED_FLIGHT_NUM> is open for boarding."
+    "The boarding gates are now open for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is underway at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is currently boarding at gate {gate}."
+    "The gate {gate} is open for passengers to board {flight} <MASKED_FLIGHT_NUM>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now ready for boarding at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding passengers at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is actively taking place at gate {gate}."
+    "Gate {gate} is open and boarding has started for {flight} <MASKED_FLIGHT_NUM>."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is in the process of boarding at gate {gate}."
+    "Please proceed to gate {gate} to board {flight} <MASKED_FLIGHT_NUM>."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now in progress at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is available now at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is currently in the boarding process at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has begun the boarding process at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}."
+    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for passengers to board."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is now active at gate {gate}."
+    "Now boarding at gate {gate} for {flight} <MASKED_FLIGHT_NUM>."
+    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for boarding passengers."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Gate {gate} is open and boarding is in progress for {flight} <MASKED_FLIGHT_NUM>."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is currently boarding at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has begun boarding at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is in progress at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is currently in the boarding phase at gate {gate}."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is in full swing at gate {gate}."
+    "Gate {gate} is open and passengers are now boarding for {flight} <MASKED_FLIGHT_NUM>."
+    "Boarding is now happening at gate {gate} for {flight} <MASKED_FLIGHT_NUM>."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers for boarding at gate {gate}."
+    "Please head to gate {gate} to board your {flight} <MASKED_FLIGHT_NUM>."
+    "Gate {gate} is now accepting passengers for {flight} <MASKED_FLIGHT_NUM> boarding."
+    "Boarding has commenced for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are open at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is now boarding at gate {gate}."
+    "Now boarding for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is in the boarding process at gate {gate}."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is currently taking place at gate {gate}."
+    "Gate {gate} is now open for passengers to board {flight} <MASKED_FLIGHT_NUM>."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is in progress at gate {gate}."
+    "Please make your way to gate {gate} for boarding {flight} <MASKED_FLIGHT_NUM>."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started and is happening at gate {gate}."
+    "Passengers are boarding now for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is ready for boarding at gate {gate}."
+    "Gate {gate} has opened for {flight} <MASKED_FLIGHT_NUM> boarding."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is currently boarding at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is available now at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> has started boarding at gate {gate}."
+    "The boarding process has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}."
+    "Boarding is now open for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is boarding now at gate {gate}."
+    "The gate for {flight} <MASKED_FLIGHT_NUM> is now open for passengers to board."
+    "Boarding is taking place for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Now boarding at gate {gate} for {flight} <MASKED_FLIGHT_NUM>."
+    "Boarding is open for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Gate {gate} is currently open for boarding for {flight} <MASKED_FLIGHT_NUM>."
+    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is open and boarding has started."
+    "The boarding process is now underway for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Please proceed to gate {gate} as {flight} <MASKED_FLIGHT_NUM> begins boarding."
+    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> are now open at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has started the boarding process at gate {gate}."
+    "Gate {gate} has been opened for {flight} <MASKED_FLIGHT_NUM> boarding."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is in the boarding process at gate {gate}."
+    "Boarding is now in progress at gate {gate} for {flight} <MASKED_FLIGHT_NUM>."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is in the boarding stage at gate {gate}."
+    "The boarding process for {flight} <MASKED_FLIGHT_NUM> is now open at gate {gate}."
+    "Boarding is actively underway for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now being boarded at gate {gate}."
+    "Passengers for {flight} <MASKED_FLIGHT_NUM> can now board at gate {gate}."
+    "Boarding is underway for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> has started at gate {gate}."
+    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is open and boarding is in progress."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is currently happening at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now boarding at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> is in the boarding process at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is now active at gate {gate}."
+    "The gate {gate} is now open and {flight} <MASKED_FLIGHT_NUM> is boarding."
+    "Boarding has started at gate {gate} for {flight} <MASKED_FLIGHT_NUM>."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is actively boarding at gate {gate}."
+    "Gate {gate} is open for passengers to board {flight} <MASKED_FLIGHT_NUM>."
+    "Boarding has commenced for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The flight {flight} <MASKED_FLIGHT_NUM> has opened boarding at gate {gate}."
+    "The boarding process has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is in the process of boarding at gate {gate}."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "The gate for {flight} <MASKED_FLIGHT_NUM> has been opened for passengers to board."
+    "Gate {gate} is open and passengers are now boarding for {flight} <MASKED_FLIGHT_NUM>."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is currently open at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is open at gate {gate}."
+    "The gate {gate} has opened for {flight} <MASKED_FLIGHT_NUM> to begin boarding."
+    "The boarding process is currently active for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Now boarding passengers at gate {gate} for {flight} <MASKED_FLIGHT_NUM>."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now in the process of boarding at gate {gate}."
+    "The boarding gates for {flight} <MASKED_FLIGHT_NUM> have opened at gate {gate}."
+    "Boarding has begun for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is currently boarding passengers at gate {gate}."
+    "Boarding for {flight} <MASKED_FLIGHT_NUM> is happening now at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is boarding passengers at gate {gate}."
+    "The gate for {flight} <MASKED_FLIGHT_NUM> is open for passengers to board."
+    "The boarding gate for {flight} <MASKED_FLIGHT_NUM> is open and boarding is in progress."
+    "Gate {gate} is now open for boarding passengers for {flight} <MASKED_FLIGHT_NUM>."
+    "Boarding has started for {flight} <MASKED_FLIGHT_NUM> at gate {gate}."
+    "Flight {flight} <MASKED_FLIGHT_NUM> is now accepting passengers for boarding at gate {gate}."
     "Please proceed to gate {gate} for the boarding of {flight} <MASKED_FLIGHT_NUM>."
-    ],
+    ]
 }
 
 # Generate dataset
@@ -1294,21 +1294,21 @@ for _ in range(10000):
     prompt_template = random.choice(prompt_templates)
 
     # Replace placeholders in the prompt
-    prompt = prompt_template.format(flight=flight_synonym, gate=gate)
+    prompt = prompt_template.format(flight=flight_synonym gate=gate)
 
     # Randomly pick a status and generate a response
     status = random.choice(statuses)
     response_template = random.choice(response_templates[status])
-    response = response_template.format(flight=flight_synonym, gate=gate)
+    response = response_template.format(flight=flight_synonym gate=gate)
 
     # Append the row to the dataset
-    rows.append([prompt, status, response])
+    rows.append([prompt status response])
 
 # Write dataset to CSV
 output_file = "flight_support_dataset.csv"
-with open(output_file, mode="w", newline="", encoding="utf-8") as file:
+with open(output_file mode="w" newline="" encoding="utf-8") as file:
     writer = csv.writer(file)
-    writer.writerow(["prompt", "status", "response"])
+    writer.writerow(["prompt" "status" "response"])
     writer.writerows(rows)
 
 print(f"Dataset successfully created and saved to {output_file}")

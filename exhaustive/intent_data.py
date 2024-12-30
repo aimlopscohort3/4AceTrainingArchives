@@ -3,471 +3,471 @@ import csv
 # Define the dataset with intents and corresponding user queries
 intent_data = {
     "flight_status": [
-        "Is the flight <MASKED_FLIGHT_NUM> on time?",
-        "Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?",
-        "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?",
-        "Is airplane <MASKED_FLIGHT_NUM> still on time?",
-        "Can you check the schedule for flight <MASKED_FLIGHT_NUM>?",
-        "Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?",
-        "Do you have updates on flight <MASKED_FLIGHT_NUM>? Is it on time?",
-        "Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?",
-        "What is the current status of flight <MASKED_FLIGHT_NUM>?",
-        "Has flight <MASKED_FLIGHT_NUM> taken off yet?",
-        "Can you provide the latest updates on flight <MASKED_FLIGHT_NUM>?",
-        "Is flight <MASKED_FLIGHT_NUM> delayed or on time?",
-        "When is flight <MASKED_FLIGHT_NUM> expected to land?",
-        "Can you verify the arrival time for flight <MASKED_FLIGHT_NUM>?",
-        "I need the departure status of flight <MASKED_FLIGHT_NUM>.",
-        "Is flight 345 on time?",
-        "Can you check the status of flight 6789?",
-        "What is the latest update on flight 1234?",
-        "Has flight 4567 boarded yet?",
-        "Is flight 8901 delayed?",
-        "Can you confirm if flight 2345 is departing soon?",
-        "Did flight 8765 take off on time?",
-        "Is airplane 4321 running as scheduled?",
-        "Please check if flight 9999 is in the air.",
-        "Has flight 123 taken off?",
-        "Can you track the status of flight 777?",
-        "Is flight 5432 experiencing any delays?",
-        "I need updates on flight 1111.",
-        "What is the departure time for flight 5678?",
-        "Do you know the arrival time of flight 3333?",
-        "Has flight 432 taken off or been delayed?",
-        "Can I get the latest status for flight 6543?",
-        "Is the aircraft 2121 on schedule?",
-        "Is flight 8989 boarding yet?",
-        "What’s the estimated time of arrival for flight 2020?",
-        "Can you check the delay status of flight 5050?",
-        "Is flight <MASKED_FLIGHT_NUM> grounded?",
-        "Has flight <MASKED_FLIGHT_NUM> landed safely?",
-        "What is the expected departure for flight 747?",
-        "Do you know if flight 3456 has left the gate?",
-        "Is flight 8888 arriving on time?",
-        "I need to verify the schedule of flight 654?",
-        "Is flight 3339 still on track for departure?",
-        "Do you know if flight <MASKED_FLIGHT_NUM> is boarding now?",
-        "What is the estimated time of departure for flight 7777?",
-        "Is flight 1818 rescheduled or on time?",
-        "Can you track if flight 444 is in the air?",
-        "Is there a delay for flight 6969?",
-        "Please confirm if flight 7373 is still scheduled.",
-        "Has airplane 555 taken off?",
-        "I need status updates on flight 9090.",
-        "Is flight 1212 canceled?",
-        "Can you check if flight 7771 is affected by weather?",
-        "When is flight 4747 expected to leave?",
-        "What’s the latest for flight <MASKED_FLIGHT_NUM>?",
-        "Can you confirm if flight 2727 has landed yet?",
-        "I need information on flight 1919.",
-        "Is flight 2828 arriving late?",
-        "Can you verify flight 8181’s status?",
-        "Has flight <MASKED_FLIGHT_NUM> been delayed or canceled?",
-        "Is flight <MASKED_FLIGHT_NUM> operational today?",
-        "When will flight <MASKED_FLIGHT_NUM> land?",
-        "Please give updates on flight 9991.",
-        "Can you check flight 6060’s departure time?",
-        "Has flight 3434 left yet?",
-        "I need to confirm flight 9494's arrival time.",
-        "Is airplane 8787 ready to depart?",
-        "Can you confirm if flight 3030 is still on track?",
-        "What is the departure gate for flight 2525?",
-        "Can I track the real-time status of flight 1213?",
-        "Has flight 5151 been delayed by weather?",
-        "Is flight 6262 landing ahead of schedule?",
-        "Do you have any new updates on flight 1414?",
-        "Has flight 9292 cleared for takeoff?",
-        "Is flight 4749 experiencing technical issues?",
-        "Can you check the reschedule time for flight 3838?",
-        "Is flight 7979 still grounded?",
-        "What time does flight 6868 arrive?",
-        "Is there a gate change for flight 5959?",
-        "Can I get a real-time update on flight 3435?",
-        "How late is flight 4343?",
-        "Has flight 8585 started boarding?",
-        "Is flight 7676 boarding now?",
-        "What’s the expected time for flight 9091?",
-        "Is flight 7171 canceled or delayed?",
-        "Can you confirm the boarding time for flight 1010?",
-        "Is flight 2323 expected to arrive early?",
-        "Has flight 4545 reported any issues?",
-        "Is flight 6363 currently in the air?",
-        "Please provide updates on flight 8282.",
-        "Is flight 5353 departing from gate 12?",
-        "What’s the status of flight 6767?",
-        "Can you verify the timing for flight 4141?",
-        "I need to check on flight 7878's departure time.",
-        "Has flight 3939 been delayed at the gate?",
-        "What’s the current location of flight 9595?",
-        "Is flight 2728 canceled or on schedule?",
-        "What is flight 6565’s estimated arrival time?",
-        "Please check the latest update on flight 5454.",
-        "Is flight 7474 delayed by weather conditions?",
-        "Can you confirm the departure of flight 3839?",
-        "I need information on flight 8484’s status.",
-        "Has airplane <MASKED_FLIGHT_NUM> been delayed, or is it on time?",
-        "Has there been a schedule change for airplane <MASKED_FLIGHT_NUM>?",
-        "Can you check if airplane <MASKED_FLIGHT_NUM> is running on schedule?",
-        "Can you confirm the departure status of flight <MASKED_FLIGHT_NUM>?",
-        "Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?",
-        "Has the schedule for service <MASKED_FLIGHT_NUM> changed?",
-        "Is flight <MASKED_FLIGHT_NUM> currently running on time?",
-        "Can you check if the plane <MASKED_FLIGHT_NUM> is on schedule today?",
-        "What’s the update on flight <MASKED_FLIGHT_NUM>? Is it on schedule?",
-        "Has flight <MASKED_FLIGHT_NUM> been delayed, or is it running on time?",
-        "Do you know the current departure time for flight <MASKED_FLIGHT_NUM>?",
-        "Can you provide the latest status of flight <MASKED_FLIGHT_NUM>?",
-        "Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?",
-        "What’s the expected departure time for service <MASKED_FLIGHT_NUM>?",
-        "Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?",
-        "Has flight <MASKED_FLIGHT_NUM> been delayed, or is it on time?",
-        "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?",
-        "Can you check if the airplane <MASKED_FLIGHT_NUM> is on schedule?",
-        "Could you tell me if airplane <MASKED_FLIGHT_NUM> is on schedule?",
-        "Is the flight number <MASKED_FLIGHT_NUM> still expected to depart on time?",
-        "Has flight <MASKED_FLIGHT_NUM> been delayed, or is it running on time?",
-        "Has the schedule for service <MASKED_FLIGHT_NUM> changed?",
-        "Can I get a confirmation that service <MASKED_FLIGHT_NUM> is on time?",
-        "Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?",
-        "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?",
-        "What’s the expected departure schedule for plane <MASKED_FLIGHT_NUM>?",
-        "Can you verify if flight <MASKED_FLIGHT_NUM> is still on time?",
-        "Do you know if flight <MASKED_FLIGHT_NUM> is scheduled to leave soon?",
-        "Can you check if airplane <MASKED_FLIGHT_NUM> is running on schedule?",
-        "Is the plane <MASKED_FLIGHT_NUM> on time or facing delays?",
-        "Can you confirm if plane <MASKED_FLIGHT_NUM> is departing as scheduled?",
-        "Is flight <MASKED_FLIGHT_NUM> still scheduled to leave on time?",
-        "Is flight <MASKED_FLIGHT_NUM> confirmed to leave as scheduled?",
-        "Could you check if service <MASKED_FLIGHT_NUM> is on schedule?",
-        "Can you tell me if flight <MASKED_FLIGHT_NUM> is still leaving on time?",
-        "Has flight <MASKED_FLIGHT_NUM> been delayed, or is it on time?",
-        "Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?",
-        "Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?",
-        "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?",
-        "Can you confirm that service <MASKED_FLIGHT_NUM> is departing on schedule?",
-        "Can you confirm if the aircraft <MASKED_FLIGHT_NUM> is running as planned?",
-        "What’s the current departure schedule for flight <MASKED_FLIGHT_NUM>?",
-        "Can you verify if service <MASKED_FLIGHT_NUM> is departing soon?",
-        "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?",
-        "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?",
-        "Has there been any change in the schedule for flight <MASKED_FLIGHT_NUM>?",
-        "Is the airplane <MASKED_FLIGHT_NUM> departing on time today?",
-        "Can you confirm that aircraft <MASKED_FLIGHT_NUM> is leaving as planned?",
-        "Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?",
-        "Is flight <MASKED_FLIGHT_NUM> confirmed to leave on schedule?",
-        "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?",
-        "Is airplane <MASKED_FLIGHT_NUM> still on time?",
-        "Is flight <MASKED_FLIGHT_NUM> confirmed to leave on schedule?",
-        "Can you check the schedule for flight <MASKED_FLIGHT_NUM>?",
-        "Can I get a confirmation that service <MASKED_FLIGHT_NUM> is on time?",
-        "Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?",
-        "Can you verify if service <MASKED_FLIGHT_NUM> is departing soon?",
-        "Can you confirm that service <MASKED_FLIGHT_NUM> is departing on schedule?",
-        "Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?",
-        "Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?",
-        "Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?",
-        "Can you confirm the departure status of flight <MASKED_FLIGHT_NUM>?",
-        "Has the schedule for service <MASKED_FLIGHT_NUM> changed?",
-        "Is flight <MASKED_FLIGHT_NUM> currently running on time?",
-        "Has the schedule for service <MASKED_FLIGHT_NUM> changed?",
-        "Can you confirm if plane <MASKED_FLIGHT_NUM> is departing as scheduled?",
-        "Can you check if airplane <MASKED_FLIGHT_NUM> is leaving as planned?",
-        "Is flight <MASKED_FLIGHT_NUM> still expected to depart as planned?",
-        "Is the plane <MASKED_FLIGHT_NUM> on time or facing delays?",
-        "Has there been any change in the schedule for flight <MASKED_FLIGHT_NUM>?",
-        "What’s the departure status of flight <MASKED_FLIGHT_NUM>? Is it on time?",
-        "Do you know the current departure time for service <MASKED_FLIGHT_NUM>?",
-        "Is flight <MASKED_FLIGHT_NUM> still expected to depart as planned?",
-        "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?",
-        "Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?",
-        "Is the plane <MASKED_FLIGHT_NUM> leaving as planned?",
-        "Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?",
-        "Can you check the schedule for flight <MASKED_FLIGHT_NUM>?",
-        "Has the schedule for service <MASKED_FLIGHT_NUM> changed?",
-        "Can you tell me if flight <MASKED_FLIGHT_NUM> is still leaving on time?",
-        "Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?",
-        "Can you tell me about the status of service <MASKED_FLIGHT_NUM>?",
-        "What’s the latest update on aircraft <MASKED_FLIGHT_NUM>? Is it on time?",
-        "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?",
-        "Has flight <MASKED_FLIGHT_NUM> been delayed, or is it running on time?",
-        "What’s the departure schedule for flight <MASKED_FLIGHT_NUM>?",
-        "Do you know the current departure time for flight <MASKED_FLIGHT_NUM>?",
-        "Is airplane <MASKED_FLIGHT_NUM> still on time?",
-        "Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?",
-        "Can you tell me if plane <MASKED_FLIGHT_NUM> is on time?",
-        "Is the plane <MASKED_FLIGHT_NUM> leaving as planned?",
-        "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?",
-        "Is the flight number <MASKED_FLIGHT_NUM> still expected to depart on time?",
-        "Can you tell me about the status of service <MASKED_FLIGHT_NUM>?",
-        "Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?",
-        "Can I get an update on aircraft <MASKED_FLIGHT_NUM>? Is it on time?",
-        "Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?",
-        "Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?",
-        "What’s the latest on flight <MASKED_FLIGHT_NUM>? Is it on time?",
-        "Is my flight on time?",
-        "Has my flight been delayed?",
-        "Is my flight departing on time?",
-        "What time is my flight scheduled to depart?",
-        "Is my flight arriving on time?",
-        "Are there any delays for my flight?",
-        "Has my flight been canceled?",
-        "Is my flight still on track?",
-        "Can you confirm my flight's departure time?",
-        "What is the status of my flight?",
-        "Is my flight running late?",
-        "When is my flight supposed to land?",
-        "Is there any delay for my flight today?",
-        "How is the status of my flight?",
-        "Can you tell me if my flight is on time?",
-        "Is my flight affected by any cancellations?",
-        "When is my flight arriving?",
-        "Are there any issues with my flight?",
-        "Will my flight depart as scheduled?",
-        "Is my flight on schedule?",
-        "What is the current status of my flight?",
-        "Is my flight departing as planned?",
-        "What time is my flight supposed to take off?",
-        "Has the schedule for my flight changed?",
-        "Is my flight delayed today?",
-        "Is my flight expected to arrive on time?",
-        "Will my flight leave as scheduled?",
-        "Is there a delay in the arrival of my flight?",
-        "Is my flight running according to plan?",
-        "Can you check the status of my flight?",
-        "What time will my flight land?",
-        "Is my flight expected to depart soon?",
-        "Has the departure time for my flight been updated?",
-        "What is the estimated arrival time of my flight?",
-        "Is my flight affected by weather conditions?",
-        "What is the delay for my flight?",
-        "Has my flight been rescheduled?",
-        "Can you tell me when my flight will land?",
-        "Is my flight departing on time today?",
-        "How is my flight progressing?",
-        "Is my flight expected to be delayed?",
-        "What is my flight status right now?",
-        "Can you confirm if my flight is delayed?",
-        "Will my flight depart on time today?",
-        "Has my flight been delayed by any reason?",
-        "Is my flight arriving according to schedule?",
-        "What time does my flight arrive?",
-        "Is the departure of my flight delayed?",
-        "When is the next update on my flight?",
-        "Can you provide an update on the status of my flight?",
-        "Is my flight affected by any traffic delays?",
-        "Is my flight expected to depart late?",
-        "When does my flight land?",
-        "Has my flight been rescheduled or delayed?",
-        "Is the status of my flight still the same?",
-        "Will my flight depart as planned today?",
-        "What is the scheduled landing time of my flight?",
-        "Can you check if my flight is on time?",
-        "Has there been any change in the schedule for my flight?",
-        "Is my flight on time or delayed?",
-        "What is the current delay for my flight?",
-        "When does my flight take off?",
-        "What is the current departure time for my flight?",
-        "Is my flight currently delayed?",
-        "Can you confirm if my flight is on time today?",
-        "When will my flight depart?",
-        "Has the time for my flight changed?",
-        "What is the estimated departure time for my flight?",
-        "Can you check the flight status for my flight?",
-        "Has there been any update on my flight?",
-        "When is the expected departure for my flight?",
-        "Is my flight on schedule or delayed?",
-        "What time is my flight expected to leave?",
-        "Can you confirm if my flight has been delayed?",
-        "Is my flight going to arrive as planned?",
-        "Is the departure for my flight delayed today?",
-        "When is the scheduled arrival time of my flight?",
-        "Is there a delay in the arrival of my flight today?",
-        "Can you check if there are any changes to the schedule of my flight?",
-        "Is my flight going to depart on time today?",
-        "When is my flight scheduled to arrive?",
-        "Is my flight experiencing any delays?",
-        "What time should I expect my flight to depart?",
-        "Is my flight still departing on time?",
-        "Has my flight been rescheduled?",
-        "What is the estimated arrival time for my flight?",
-        "What is the current arrival time for my flight?",
-        "Is my flight delayed or on time?",
-        "Has there been any new update for my flight?",
-        "Is my flight on time right now?",
-        "What time is my flight expected to take off?",
-        "When does my flight arrive today?",
-        "Can you check the delay status of my flight?",
-        "What is the delay time for my flight?",
-        "Will my flight depart at the scheduled time?",
-        "Has my flight been affected by weather?",
-        "Is my flight going to depart as scheduled?",
-        "Can you tell me the arrival time of my flight?",
-        "Is there a delay for my flight today?",
-        "What is the current status for my flight?",
-        "Is my flight going to arrive on time today?",
-        "Is my flight running according to the original schedule?",
-        "Has the time for my flight been adjusted?",
-        "Can you provide the status update for my flight?",
-        "Will my flight depart on time or be delayed?",
-        "What is the expected arrival for my flight?",
-        "When is the latest time for my flight to depart?",
-        "Can you tell me if my flight is on time?",
-        "Is there any change to the schedule for my flight?",
-        "What is the current status of my flight?",
-        "Is my flight expected to depart soon?",
-        "Is my flight arriving as scheduled?",
-        "When will my flight take off?",
-        "Is my flight arriving soon?",
-        "Will my flight be delayed?",
-        "When is the next update for my flight?",
-        "Is there any issue with my flight?",
-        "When does my flight depart?",
-        "Can you tell me if my flight will be delayed?",
-        "Has there been any schedule change for my flight?",
-        "Is my flight delayed or on time today?",
-        "Will my flight depart as planned?",
-        "Is my flight on time for today?",
-        "What is the current expected arrival for my flight?",
-        "Can you provide the departure status for my flight?",
-        "Is my flight delayed for any reason?",
-        "When is the next scheduled arrival for my flight?",
-        "Can you check if my flight is running on time?",
-        "What is the expected time of departure for my flight?",
-        "When will my flight land?",
-        "Is there any delay for my flight today?",
-        "What time is my flight expected to arrive today?",
-        "Can you confirm if my flight is departing on time?",
-        "When does my flight depart from the airport?",
-        "Is my flight arriving late today?",
-        "What time should I expect to board my flight?",
-        "Is my flight leaving at the scheduled time?",
-        "When is my flight scheduled to take off?",
-        "Will there be any delay for my flight?",
-        "Can you check if my flight will depart on time?",
-        "What time is my flight landing?",
-        "Has my flight been delayed by weather conditions?",
-        "What is the current departure time for my flight?",
-        "Is my flight departing according to schedule?",
-        "When is my flight expected to arrive?",
-        "Can I get my flight status?",
+        "Is the flight <MASKED_FLIGHT_NUM> on time?"
+        "Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?"
+        "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?"
+        "Is airplane <MASKED_FLIGHT_NUM> still on time?"
+        "Can you check the schedule for flight <MASKED_FLIGHT_NUM>?"
+        "Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?"
+        "Do you have updates on flight <MASKED_FLIGHT_NUM>? Is it on time?"
+        "Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?"
+        "What is the current status of flight <MASKED_FLIGHT_NUM>?"
+        "Has flight <MASKED_FLIGHT_NUM> taken off yet?"
+        "Can you provide the latest updates on flight <MASKED_FLIGHT_NUM>?"
+        "Is flight <MASKED_FLIGHT_NUM> delayed or on time?"
+        "When is flight <MASKED_FLIGHT_NUM> expected to land?"
+        "Can you verify the arrival time for flight <MASKED_FLIGHT_NUM>?"
+        "I need the departure status of flight <MASKED_FLIGHT_NUM>."
+        "Is flight 345 on time?"
+        "Can you check the status of flight 6789?"
+        "What is the latest update on flight 1234?"
+        "Has flight 4567 boarded yet?"
+        "Is flight 8901 delayed?"
+        "Can you confirm if flight 2345 is departing soon?"
+        "Did flight 8765 take off on time?"
+        "Is airplane 4321 running as scheduled?"
+        "Please check if flight 9999 is in the air."
+        "Has flight 123 taken off?"
+        "Can you track the status of flight 777?"
+        "Is flight 5432 experiencing any delays?"
+        "I need updates on flight 1111."
+        "What is the departure time for flight 5678?"
+        "Do you know the arrival time of flight 3333?"
+        "Has flight 432 taken off or been delayed?"
+        "Can I get the latest status for flight 6543?"
+        "Is the aircraft 2121 on schedule?"
+        "Is flight 8989 boarding yet?"
+        "What’s the estimated time of arrival for flight 2020?"
+        "Can you check the delay status of flight 5050?"
+        "Is flight <MASKED_FLIGHT_NUM> grounded?"
+        "Has flight <MASKED_FLIGHT_NUM> landed safely?"
+        "What is the expected departure for flight 747?"
+        "Do you know if flight 3456 has left the gate?"
+        "Is flight 8888 arriving on time?"
+        "I need to verify the schedule of flight 654?"
+        "Is flight 3339 still on track for departure?"
+        "Do you know if flight <MASKED_FLIGHT_NUM> is boarding now?"
+        "What is the estimated time of departure for flight 7777?"
+        "Is flight 1818 rescheduled or on time?"
+        "Can you track if flight 444 is in the air?"
+        "Is there a delay for flight 6969?"
+        "Please confirm if flight 7373 is still scheduled."
+        "Has airplane 555 taken off?"
+        "I need status updates on flight 9090."
+        "Is flight 1212 canceled?"
+        "Can you check if flight 7771 is affected by weather?"
+        "When is flight 4747 expected to leave?"
+        "What’s the latest for flight <MASKED_FLIGHT_NUM>?"
+        "Can you confirm if flight 2727 has landed yet?"
+        "I need information on flight 1919."
+        "Is flight 2828 arriving late?"
+        "Can you verify flight 8181’s status?"
+        "Has flight <MASKED_FLIGHT_NUM> been delayed or canceled?"
+        "Is flight <MASKED_FLIGHT_NUM> operational today?"
+        "When will flight <MASKED_FLIGHT_NUM> land?"
+        "Please give updates on flight 9991."
+        "Can you check flight 6060’s departure time?"
+        "Has flight 3434 left yet?"
+        "I need to confirm flight 9494's arrival time."
+        "Is airplane 8787 ready to depart?"
+        "Can you confirm if flight 3030 is still on track?"
+        "What is the departure gate for flight 2525?"
+        "Can I track the real-time status of flight 1213?"
+        "Has flight 5151 been delayed by weather?"
+        "Is flight 6262 landing ahead of schedule?"
+        "Do you have any new updates on flight 1414?"
+        "Has flight 9292 cleared for takeoff?"
+        "Is flight 4749 experiencing technical issues?"
+        "Can you check the reschedule time for flight 3838?"
+        "Is flight 7979 still grounded?"
+        "What time does flight 6868 arrive?"
+        "Is there a gate change for flight 5959?"
+        "Can I get a real-time update on flight 3435?"
+        "How late is flight 4343?"
+        "Has flight 8585 started boarding?"
+        "Is flight 7676 boarding now?"
+        "What’s the expected time for flight 9091?"
+        "Is flight 7171 canceled or delayed?"
+        "Can you confirm the boarding time for flight 1010?"
+        "Is flight 2323 expected to arrive early?"
+        "Has flight 4545 reported any issues?"
+        "Is flight 6363 currently in the air?"
+        "Please provide updates on flight 8282."
+        "Is flight 5353 departing from gate 12?"
+        "What’s the status of flight 6767?"
+        "Can you verify the timing for flight 4141?"
+        "I need to check on flight 7878's departure time."
+        "Has flight 3939 been delayed at the gate?"
+        "What’s the current location of flight 9595?"
+        "Is flight 2728 canceled or on schedule?"
+        "What is flight 6565’s estimated arrival time?"
+        "Please check the latest update on flight 5454."
+        "Is flight 7474 delayed by weather conditions?"
+        "Can you confirm the departure of flight 3839?"
+        "I need information on flight 8484’s status."
+        "Has airplane <MASKED_FLIGHT_NUM> been delayed or is it on time?"
+        "Has there been a schedule change for airplane <MASKED_FLIGHT_NUM>?"
+        "Can you check if airplane <MASKED_FLIGHT_NUM> is running on schedule?"
+        "Can you confirm the departure status of flight <MASKED_FLIGHT_NUM>?"
+        "Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?"
+        "Has the schedule for service <MASKED_FLIGHT_NUM> changed?"
+        "Is flight <MASKED_FLIGHT_NUM> currently running on time?"
+        "Can you check if the plane <MASKED_FLIGHT_NUM> is on schedule today?"
+        "What’s the update on flight <MASKED_FLIGHT_NUM>? Is it on schedule?"
+        "Has flight <MASKED_FLIGHT_NUM> been delayed or is it running on time?"
+        "Do you know the current departure time for flight <MASKED_FLIGHT_NUM>?"
+        "Can you provide the latest status of flight <MASKED_FLIGHT_NUM>?"
+        "Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?"
+        "What’s the expected departure time for service <MASKED_FLIGHT_NUM>?"
+        "Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?"
+        "Has flight <MASKED_FLIGHT_NUM> been delayed or is it on time?"
+        "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?"
+        "Can you check if the airplane <MASKED_FLIGHT_NUM> is on schedule?"
+        "Could you tell me if airplane <MASKED_FLIGHT_NUM> is on schedule?"
+        "Is the flight number <MASKED_FLIGHT_NUM> still expected to depart on time?"
+        "Has flight <MASKED_FLIGHT_NUM> been delayed or is it running on time?"
+        "Has the schedule for service <MASKED_FLIGHT_NUM> changed?"
+        "Can I get a confirmation that service <MASKED_FLIGHT_NUM> is on time?"
+        "Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?"
+        "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?"
+        "What’s the expected departure schedule for plane <MASKED_FLIGHT_NUM>?"
+        "Can you verify if flight <MASKED_FLIGHT_NUM> is still on time?"
+        "Do you know if flight <MASKED_FLIGHT_NUM> is scheduled to leave soon?"
+        "Can you check if airplane <MASKED_FLIGHT_NUM> is running on schedule?"
+        "Is the plane <MASKED_FLIGHT_NUM> on time or facing delays?"
+        "Can you confirm if plane <MASKED_FLIGHT_NUM> is departing as scheduled?"
+        "Is flight <MASKED_FLIGHT_NUM> still scheduled to leave on time?"
+        "Is flight <MASKED_FLIGHT_NUM> confirmed to leave as scheduled?"
+        "Could you check if service <MASKED_FLIGHT_NUM> is on schedule?"
+        "Can you tell me if flight <MASKED_FLIGHT_NUM> is still leaving on time?"
+        "Has flight <MASKED_FLIGHT_NUM> been delayed or is it on time?"
+        "Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?"
+        "Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?"
+        "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?"
+        "Can you confirm that service <MASKED_FLIGHT_NUM> is departing on schedule?"
+        "Can you confirm if the aircraft <MASKED_FLIGHT_NUM> is running as planned?"
+        "What’s the current departure schedule for flight <MASKED_FLIGHT_NUM>?"
+        "Can you verify if service <MASKED_FLIGHT_NUM> is departing soon?"
+        "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?"
+        "Do you know if flight <MASKED_FLIGHT_NUM> is departing on time?"
+        "Has there been any change in the schedule for flight <MASKED_FLIGHT_NUM>?"
+        "Is the airplane <MASKED_FLIGHT_NUM> departing on time today?"
+        "Can you confirm that aircraft <MASKED_FLIGHT_NUM> is leaving as planned?"
+        "Do you know if aircraft <MASKED_FLIGHT_NUM> is leaving on schedule?"
+        "Is flight <MASKED_FLIGHT_NUM> confirmed to leave on schedule?"
+        "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?"
+        "Is airplane <MASKED_FLIGHT_NUM> still on time?"
+        "Is flight <MASKED_FLIGHT_NUM> confirmed to leave on schedule?"
+        "Can you check the schedule for flight <MASKED_FLIGHT_NUM>?"
+        "Can I get a confirmation that service <MASKED_FLIGHT_NUM> is on time?"
+        "Can you confirm if flight <MASKED_FLIGHT_NUM> is running as scheduled?"
+        "Can you verify if service <MASKED_FLIGHT_NUM> is departing soon?"
+        "Can you confirm that service <MASKED_FLIGHT_NUM> is departing on schedule?"
+        "Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?"
+        "Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?"
+        "Please confirm the status of airplane <MASKED_FLIGHT_NUM>. Is it on time?"
+        "Can you confirm the departure status of flight <MASKED_FLIGHT_NUM>?"
+        "Has the schedule for service <MASKED_FLIGHT_NUM> changed?"
+        "Is flight <MASKED_FLIGHT_NUM> currently running on time?"
+        "Has the schedule for service <MASKED_FLIGHT_NUM> changed?"
+        "Can you confirm if plane <MASKED_FLIGHT_NUM> is departing as scheduled?"
+        "Can you check if airplane <MASKED_FLIGHT_NUM> is leaving as planned?"
+        "Is flight <MASKED_FLIGHT_NUM> still expected to depart as planned?"
+        "Is the plane <MASKED_FLIGHT_NUM> on time or facing delays?"
+        "Has there been any change in the schedule for flight <MASKED_FLIGHT_NUM>?"
+        "What’s the departure status of flight <MASKED_FLIGHT_NUM>? Is it on time?"
+        "Do you know the current departure time for service <MASKED_FLIGHT_NUM>?"
+        "Is flight <MASKED_FLIGHT_NUM> still expected to depart as planned?"
+        "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?"
+        "Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?"
+        "Is the plane <MASKED_FLIGHT_NUM> leaving as planned?"
+        "Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?"
+        "Can you check the schedule for flight <MASKED_FLIGHT_NUM>?"
+        "Has the schedule for service <MASKED_FLIGHT_NUM> changed?"
+        "Can you tell me if flight <MASKED_FLIGHT_NUM> is still leaving on time?"
+        "Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?"
+        "Can you tell me about the status of service <MASKED_FLIGHT_NUM>?"
+        "What’s the latest update on aircraft <MASKED_FLIGHT_NUM>? Is it on time?"
+        "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?"
+        "Has flight <MASKED_FLIGHT_NUM> been delayed or is it running on time?"
+        "What’s the departure schedule for flight <MASKED_FLIGHT_NUM>?"
+        "Do you know the current departure time for flight <MASKED_FLIGHT_NUM>?"
+        "Is airplane <MASKED_FLIGHT_NUM> still on time?"
+        "Is aircraft <MASKED_FLIGHT_NUM> still leaving on time today?"
+        "Can you tell me if plane <MASKED_FLIGHT_NUM> is on time?"
+        "Is the plane <MASKED_FLIGHT_NUM> leaving as planned?"
+        "Is plane <MASKED_FLIGHT_NUM> still leaving as scheduled?"
+        "Is the flight number <MASKED_FLIGHT_NUM> still expected to depart on time?"
+        "Can you tell me about the status of service <MASKED_FLIGHT_NUM>?"
+        "Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?"
+        "Can I get an update on aircraft <MASKED_FLIGHT_NUM>? Is it on time?"
+        "Is the aircraft <MASKED_FLIGHT_NUM> still scheduled to depart on time?"
+        "Do you have updates about flight <MASKED_FLIGHT_NUM>? Is it on time?"
+        "What’s the latest on flight <MASKED_FLIGHT_NUM>? Is it on time?"
+        "Is my flight on time?"
+        "Has my flight been delayed?"
+        "Is my flight departing on time?"
+        "What time is my flight scheduled to depart?"
+        "Is my flight arriving on time?"
+        "Are there any delays for my flight?"
+        "Has my flight been canceled?"
+        "Is my flight still on track?"
+        "Can you confirm my flight's departure time?"
+        "What is the status of my flight?"
+        "Is my flight running late?"
+        "When is my flight supposed to land?"
+        "Is there any delay for my flight today?"
+        "How is the status of my flight?"
+        "Can you tell me if my flight is on time?"
+        "Is my flight affected by any cancellations?"
+        "When is my flight arriving?"
+        "Are there any issues with my flight?"
+        "Will my flight depart as scheduled?"
+        "Is my flight on schedule?"
+        "What is the current status of my flight?"
+        "Is my flight departing as planned?"
+        "What time is my flight supposed to take off?"
+        "Has the schedule for my flight changed?"
+        "Is my flight delayed today?"
+        "Is my flight expected to arrive on time?"
+        "Will my flight leave as scheduled?"
+        "Is there a delay in the arrival of my flight?"
+        "Is my flight running according to plan?"
+        "Can you check the status of my flight?"
+        "What time will my flight land?"
+        "Is my flight expected to depart soon?"
+        "Has the departure time for my flight been updated?"
+        "What is the estimated arrival time of my flight?"
+        "Is my flight affected by weather conditions?"
+        "What is the delay for my flight?"
+        "Has my flight been rescheduled?"
+        "Can you tell me when my flight will land?"
+        "Is my flight departing on time today?"
+        "How is my flight progressing?"
+        "Is my flight expected to be delayed?"
+        "What is my flight status right now?"
+        "Can you confirm if my flight is delayed?"
+        "Will my flight depart on time today?"
+        "Has my flight been delayed by any reason?"
+        "Is my flight arriving according to schedule?"
+        "What time does my flight arrive?"
+        "Is the departure of my flight delayed?"
+        "When is the next update on my flight?"
+        "Can you provide an update on the status of my flight?"
+        "Is my flight affected by any traffic delays?"
+        "Is my flight expected to depart late?"
+        "When does my flight land?"
+        "Has my flight been rescheduled or delayed?"
+        "Is the status of my flight still the same?"
+        "Will my flight depart as planned today?"
+        "What is the scheduled landing time of my flight?"
+        "Can you check if my flight is on time?"
+        "Has there been any change in the schedule for my flight?"
+        "Is my flight on time or delayed?"
+        "What is the current delay for my flight?"
+        "When does my flight take off?"
+        "What is the current departure time for my flight?"
+        "Is my flight currently delayed?"
+        "Can you confirm if my flight is on time today?"
+        "When will my flight depart?"
+        "Has the time for my flight changed?"
+        "What is the estimated departure time for my flight?"
+        "Can you check the flight status for my flight?"
+        "Has there been any update on my flight?"
+        "When is the expected departure for my flight?"
+        "Is my flight on schedule or delayed?"
+        "What time is my flight expected to leave?"
+        "Can you confirm if my flight has been delayed?"
+        "Is my flight going to arrive as planned?"
+        "Is the departure for my flight delayed today?"
+        "When is the scheduled arrival time of my flight?"
+        "Is there a delay in the arrival of my flight today?"
+        "Can you check if there are any changes to the schedule of my flight?"
+        "Is my flight going to depart on time today?"
+        "When is my flight scheduled to arrive?"
+        "Is my flight experiencing any delays?"
+        "What time should I expect my flight to depart?"
+        "Is my flight still departing on time?"
+        "Has my flight been rescheduled?"
+        "What is the estimated arrival time for my flight?"
+        "What is the current arrival time for my flight?"
+        "Is my flight delayed or on time?"
+        "Has there been any new update for my flight?"
+        "Is my flight on time right now?"
+        "What time is my flight expected to take off?"
+        "When does my flight arrive today?"
+        "Can you check the delay status of my flight?"
+        "What is the delay time for my flight?"
+        "Will my flight depart at the scheduled time?"
+        "Has my flight been affected by weather?"
+        "Is my flight going to depart as scheduled?"
+        "Can you tell me the arrival time of my flight?"
+        "Is there a delay for my flight today?"
+        "What is the current status for my flight?"
+        "Is my flight going to arrive on time today?"
+        "Is my flight running according to the original schedule?"
+        "Has the time for my flight been adjusted?"
+        "Can you provide the status update for my flight?"
+        "Will my flight depart on time or be delayed?"
+        "What is the expected arrival for my flight?"
+        "When is the latest time for my flight to depart?"
+        "Can you tell me if my flight is on time?"
+        "Is there any change to the schedule for my flight?"
+        "What is the current status of my flight?"
+        "Is my flight expected to depart soon?"
+        "Is my flight arriving as scheduled?"
+        "When will my flight take off?"
+        "Is my flight arriving soon?"
+        "Will my flight be delayed?"
+        "When is the next update for my flight?"
+        "Is there any issue with my flight?"
+        "When does my flight depart?"
+        "Can you tell me if my flight will be delayed?"
+        "Has there been any schedule change for my flight?"
+        "Is my flight delayed or on time today?"
+        "Will my flight depart as planned?"
+        "Is my flight on time for today?"
+        "What is the current expected arrival for my flight?"
+        "Can you provide the departure status for my flight?"
+        "Is my flight delayed for any reason?"
+        "When is the next scheduled arrival for my flight?"
+        "Can you check if my flight is running on time?"
+        "What is the expected time of departure for my flight?"
+        "When will my flight land?"
+        "Is there any delay for my flight today?"
+        "What time is my flight expected to arrive today?"
+        "Can you confirm if my flight is departing on time?"
+        "When does my flight depart from the airport?"
+        "Is my flight arriving late today?"
+        "What time should I expect to board my flight?"
+        "Is my flight leaving at the scheduled time?"
+        "When is my flight scheduled to take off?"
+        "Will there be any delay for my flight?"
+        "Can you check if my flight will depart on time?"
+        "What time is my flight landing?"
+        "Has my flight been delayed by weather conditions?"
+        "What is the current departure time for my flight?"
+        "Is my flight departing according to schedule?"
+        "When is my flight expected to arrive?"
+        "Can I get my flight status?"
         "May I know if my flight is as scheduled?"
     
-    ],
+    ]
     # "book_flight": [
-    #     "I want to book a flight.",
-    #     "Can you help me book a ticket?",
-    #     "I need to book a flight to New York.",
-    #     "How do I reserve a flight?",
-    #     "Book a flight for me, please."
-    # ],
+    #     "I want to book a flight."
+    #     "Can you help me book a ticket?"
+    #     "I need to book a flight to New York."
+    #     "How do I reserve a flight?"
+    #     "Book a flight for me please."
+    # ]
     # "cancel_ticket": [
-    #     "Cancel my ticket.",
-    #     "I need to cancel my flight reservation.",
-    #     "Can you help me cancel my booking?",
-    #     "Cancel the ticket for flight 123.",
+    #     "Cancel my ticket."
+    #     "I need to cancel my flight reservation."
+    #     "Can you help me cancel my booking?"
+    #     "Cancel the ticket for flight 123."
     #     "How do I cancel my ticket?"
-    # ],
+    # ]
     # "reschedule_flight": [
-    #     "I need to reschedule my flight.",
-    #     "Can you help me change my flight time?",
-    #     "Reschedule my flight to tomorrow.",
-    #     "How do I postpone my flight?",
+    #     "I need to reschedule my flight."
+    #     "Can you help me change my flight time?"
+    #     "Reschedule my flight to tomorrow."
+    #     "How do I postpone my flight?"
     #     "Can I reschedule my booking for next week?"
-    # ],
+    # ]
     # "baggage_policy": [
-    #     "What is your baggage policy?",
-    #     "How much luggage can I carry?",
-    #     "Tell me about the baggage allowance.",
-    #     "Is there a fee for extra luggage?",
+    #     "What is your baggage policy?"
+    #     "How much luggage can I carry?"
+    #     "Tell me about the baggage allowance."
+    #     "Is there a fee for extra luggage?"
     #     "What are the rules for hand baggage?"
     # ]
     "generic_query": [
-        "How can I book a flight to New York?",
-        "What is the baggage allowance for international flights?",
-        "Can I change my seat after booking?",
-        "What documents do I need for domestic flights?",
-        "Are there any discounts for early bookings?",
-        "How do I cancel my flight ticket?",
-        "Is there a fee for rescheduling my flight?",
-        "How long before departure should I arrive at the airport?",
-        "What is the policy for carrying liquids in hand luggage?",
-        "Can I bring my pet on board?",
-        "What happens if I miss my connecting flight?",
-        "How do I request a wheelchair for my flight?",
-        "Are meals included in economy class?",
-        "What are the check-in options available?",
-        "Can I upgrade to business class after booking?",
-        "How can I track my baggage after landing?",
-        "Is there Wi-Fi available on the flight?",
-        "What are the COVID-19 travel requirements?",
-        "How do I earn frequent flyer miles?",
-        "What are the restrictions on carry-on luggage size?",
-        "Can I book a flight for someone else?",
-        "How do I contact customer service regarding my flight?",
-        "Is there in-flight entertainment available?",
-        "What are the refund policies for canceled flights?",
-        "Can I request a window seat during booking?",
-        "How do I know if my flight is overbooked?",
-        "What is the maximum weight for checked baggage?",
-        "Can I carry medical equipment on board?",
-        "What is the minimum age for unaccompanied minors?",
-        "Are airport lounges accessible to all passengers?",
-        "How do I upgrade my seat to first class?",
-        "Can I get a refund for a delayed flight?",
-        "How much does extra baggage cost?",
-        "What is the in-flight entertainment like on long-haul flights?",
-        "Are there family discounts for group bookings?",
-        "What are the vaccination requirements for international flights?",
-        "How do I check the weather for my destination before flying?",
-        "What should I do if I lose my boarding pass?",
-        "How can I pay for flight tickets online?",
-        "What types of meals are served in business class?",
-        "How can I report lost luggage?",
-        "Can I bring my own food on the flight?",
-        "How do I request a special meal for dietary restrictions?",
-        "Is there priority boarding for pregnant passengers?",
-        "What is the cost for adding extra legroom seats?",
-        "How do I know if my flight has been rescheduled?",
-        "Are there designated smoking areas at airports?",
-        "How early can I check in for my flight?",
-        "What should I do if my flight gets canceled at the airport?",
-        "How do I claim compensation for a delayed flight?",
-        "Is there a limit to how much duty-free I can carry?",
-        "Can I request an airport pickup service?",
-        "What happens if I forget my ID at the airport?",
-        "How do I check seat availability before booking?",
-        "Can I transfer my ticket to another person?",
-        "Are there restrictions for flying with infants?",
-        "Can I add an additional stopover to my journey?",
-        "How do I check the loyalty program benefits?",
-        "Are electric devices allowed in the cabin?",
-        "What are the safety procedures during turbulence?",
-        "Can I book an open-ended return flight?",
-        "What is the refund process for unused tickets?",
-        "How can I extend my stay after booking?",
-        "Is travel insurance included in the ticket price?",
-        "Can I book a flight with multiple destinations?",
-        "How can I apply for a travel visa through the airline?",
-        "What happens if my baggage is overweight?",
-        "Are there mobile apps for flight status tracking?",
-        "Can I pre-order duty-free items on board?",
-        "What are the policies for emergency exits seating?",
-        "How do I register for flight alerts?",
-        "Can I check my child’s seat for safety regulations?",
-        "What should I do if my baggage is damaged?",
-        "Is there a direct flight to my destination?",
-        "How do I book flights with flexible dates?",
-        "Can I cancel my flight within 24 hours?",
-        "What is the cancellation fee for international flights?",
-        "Are there exclusive deals for students?",
-        "How can I rebook a missed flight?",
-        "How do I track my layover times?",
-        "Are pets allowed in the cabin or cargo hold?",
-        "Can I request an interpreter for international flights?",
-        "What should I do if my flight is overbooked?", 
-        "Can you help me book a ticket?",
-        "Can you help me cancel my booking?",
-        "Can you help me change my flight time?",
+        "How can I book a flight to New York?"
+        "What is the baggage allowance for international flights?"
+        "Can I change my seat after booking?"
+        "What documents do I need for domestic flights?"
+        "Are there any discounts for early bookings?"
+        "How do I cancel my flight ticket?"
+        "Is there a fee for rescheduling my flight?"
+        "How long before departure should I arrive at the airport?"
+        "What is the policy for carrying liquids in hand luggage?"
+        "Can I bring my pet on board?"
+        "What happens if I miss my connecting flight?"
+        "How do I request a wheelchair for my flight?"
+        "Are meals included in economy class?"
+        "What are the check-in options available?"
+        "Can I upgrade to business class after booking?"
+        "How can I track my baggage after landing?"
+        "Is there Wi-Fi available on the flight?"
+        "What are the COVID-19 travel requirements?"
+        "How do I earn frequent flyer miles?"
+        "What are the restrictions on carry-on luggage size?"
+        "Can I book a flight for someone else?"
+        "How do I contact customer service regarding my flight?"
+        "Is there in-flight entertainment available?"
+        "What are the refund policies for canceled flights?"
+        "Can I request a window seat during booking?"
+        "How do I know if my flight is overbooked?"
+        "What is the maximum weight for checked baggage?"
+        "Can I carry medical equipment on board?"
+        "What is the minimum age for unaccompanied minors?"
+        "Are airport lounges accessible to all passengers?"
+        "How do I upgrade my seat to first class?"
+        "Can I get a refund for a delayed flight?"
+        "How much does extra baggage cost?"
+        "What is the in-flight entertainment like on long-haul flights?"
+        "Are there family discounts for group bookings?"
+        "What are the vaccination requirements for international flights?"
+        "How do I check the weather for my destination before flying?"
+        "What should I do if I lose my boarding pass?"
+        "How can I pay for flight tickets online?"
+        "What types of meals are served in business class?"
+        "How can I report lost luggage?"
+        "Can I bring my own food on the flight?"
+        "How do I request a special meal for dietary restrictions?"
+        "Is there priority boarding for pregnant passengers?"
+        "What is the cost for adding extra legroom seats?"
+        "How do I know if my flight has been rescheduled?"
+        "Are there designated smoking areas at airports?"
+        "How early can I check in for my flight?"
+        "What should I do if my flight gets canceled at the airport?"
+        "How do I claim compensation for a delayed flight?"
+        "Is there a limit to how much duty-free I can carry?"
+        "Can I request an airport pickup service?"
+        "What happens if I forget my ID at the airport?"
+        "How do I check seat availability before booking?"
+        "Can I transfer my ticket to another person?"
+        "Are there restrictions for flying with infants?"
+        "Can I add an additional stopover to my journey?"
+        "How do I check the loyalty program benefits?"
+        "Are electric devices allowed in the cabin?"
+        "What are the safety procedures during turbulence?"
+        "Can I book an open-ended return flight?"
+        "What is the refund process for unused tickets?"
+        "How can I extend my stay after booking?"
+        "Is travel insurance included in the ticket price?"
+        "Can I book a flight with multiple destinations?"
+        "How can I apply for a travel visa through the airline?"
+        "What happens if my baggage is overweight?"
+        "Are there mobile apps for flight status tracking?"
+        "Can I pre-order duty-free items on board?"
+        "What are the policies for emergency exits seating?"
+        "How do I register for flight alerts?"
+        "Can I check my child’s seat for safety regulations?"
+        "What should I do if my baggage is damaged?"
+        "Is there a direct flight to my destination?"
+        "How do I book flights with flexible dates?"
+        "Can I cancel my flight within 24 hours?"
+        "What is the cancellation fee for international flights?"
+        "Are there exclusive deals for students?"
+        "How can I rebook a missed flight?"
+        "How do I track my layover times?"
+        "Are pets allowed in the cabin or cargo hold?"
+        "Can I request an interpreter for international flights?"
+        "What should I do if my flight is overbooked?" 
+        "Can you help me book a ticket?"
+        "Can you help me cancel my booking?"
+        "Can you help me change my flight time?"
         "Can you tell me baggage policies?"
 
 
@@ -479,13 +479,13 @@ intent_data = {
 output_csv = "intent_dataset.csv"
 
 # Write data to CSV
-with open(output_csv, mode="w", newline="", encoding="utf-8") as file:
+with open(output_csv mode="w" newline="" encoding="utf-8") as file:
     writer = csv.writer(file)
     # Write the header
-    writer.writerow(["text", "intent"])
+    writer.writerow(["text" "intent"])
     # Write each intent and its associated queries
-    for intent, queries in intent_data.items():
+    for intent queries in intent_data.items():
         for query in queries:
-            writer.writerow([query, intent])
+            writer.writerow([query intent])
 
 print(f"Dataset successfully created and saved to {output_csv}")
